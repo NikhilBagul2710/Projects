@@ -1,0 +1,4403 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SQL Queries:
+Consider the given Database Schema: for problem statement 1
+Dept (Deptno , Name , Location, Managerempid)
+Employees (name, empid, address, city, dob, date_of_joining,gender, salary, deptno)
+Gender must take value ‘M’ or ‘F’.
+Project(Projectid, title,city).
+Works (empid , Projectid, total_hrs_worked);
+Dependant(empid, name_of_dependant, age, relation)
+Primary Key is underlined.
+1. Develop DDL to implement the above schema enforcing primary key, check constraints (F and
+M for gender) and foreign key constraints.
+2. Insert data in each table .
+3. Add column Mobile number in employee table
+4. Update mobile numbers for each employee.
+Develop DML to Populate Database
+5. Develop a SQL query to list employees having name starting with ‘S’
+6. Develop a SQL query to list department having location ‘Building 1’
+7. Develop a SQL query to list employee having joining year 2019 to 2020
+8. Develop a SQL query to Find the names and cities of residence of all employees who work for
+“Banking project”
+9. Develop a SQL query to find time required for “Banking project”
+10. Develop a SQL query to Find all employees in the database who live in the same cities as the
+project for which they work
+
+
+---------------------------------------------------------------------------
+CREATE TABLE Dept (
+    Deptno INT PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL,
+    Location VARCHAR(255) NOT NULL,
+    Managerempid INT,
+    CONSTRAINT fk_manager FOREIGN KEY (Managerempid) REFERENCES Employees(empid)
+);
+
+
+CREATE TABLE Employees (
+    empid INT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    address VARCHAR(255),
+    city VARCHAR(255),
+    dob DATE,
+    date_of_joining DATE,
+    gender CHAR(1) CHECK (gender IN ('M', 'F')),
+    salary DECIMAL(10,2),
+    deptno INT,
+    CONSTRAINT fk_dept FOREIGN KEY (deptno) REFERENCES Dept(Deptno)
+);
+
+
+CREATE TABLE Project (
+    Projectid INT PRIMARY KEY,
+    title VARCHAR(255),
+    city VARCHAR(255)
+);
+
+CREATE TABLE Works (
+    empid INT,
+    Projectid INT,
+    total_hrs_worked INT,
+    PRIMARY KEY (empid, Projectid),
+    CONSTRAINT fk_works_emp FOREIGN KEY (empid) REFERENCES Employees(empid),
+    CONSTRAINT fk_works_project FOREIGN KEY (Projectid) REFERENCES Project(Projectid)
+);
+
+CREATE TABLE Dependant (
+    empid INT,
+    name_of_dependant VARCHAR(255),
+    age INT,
+    relation VARCHAR(255),
+    PRIMARY KEY (empid, name_of_dependant),
+    CONSTRAINT fk_dependant_emp FOREIGN KEY (empid) REFERENCES Employees(empid)
+);
+--------------------------------------------------------------------------------------------
+INSERT INTO Dept VALUES (1, 'IT', 'Building 1', NULL);
+INSERT INTO Dept VALUES (2, 'HR', 'Building 2', NULL);
+-- Add more rows as needed
+
+INSERT INTO Employees VALUES (1, 'John Doe', '123 Main St', 'City1', '1990-01-01', '2022-01-01', 'M', 50000.00, 1);
+INSERT INTO Employees VALUES (2, 'Jane Smith', '456 Oak St', 'City2', '1995-05-15', '2021-02-15', 'F', 60000.00, 2);
+-- Add more rows as needed
+
+INSERT INTO Project VALUES (1, 'Banking Project', 'City1');
+INSERT INTO Project VALUES (2, 'HR System', 'City2');
+-- Add more rows as needed
+
+INSERT INTO Works VALUES (1, 1, 40);
+INSERT INTO Works VALUES (2, 1, 30);
+-- Add more rows as needed
+
+
+INSERT INTO Dependant VALUES (1, 'Dependant1', 5, 'Child');
+INSERT INTO Dependant VALUES (1, 'Dependant2', 8, 'Child');
+-- Add more rows as needed
+-----------------------------------------------------------------------------
+ALTER TABLE Employees
+ADD COLUMN Mobile_number VARCHAR(20);
+---------------------------------------------------------------------
+UPDATE Employees
+SET Mobile_number = '123-456-7890'
+WHERE empid = 1;
+
+UPDATE Employees
+SET Mobile_number = '987-654-3210'
+WHERE empid = 2;
+
+-- Continue updating for each employee
+-- Insert more data into Employees table with Mobile_number
+INSERT INTO Employees VALUES (3, 'Bob Johnson', '789 Pine St', 'City3', '1985-08-10', '2020-03-20', 'M', 75000.00, 1, '555-123-4567');
+INSERT INTO Employees VALUES (4, 'Alice Brown', '101 Elm St', 'City1', '1992-12-05', '2019-11-15', 'F', 60000.00, 2, '555-987-6543');
+-- Add more rows as needed
+------------------------------------------------------------------------------------
+SELECT *
+FROM Dept
+WHERE Location = 'Building 1';
+---------------------------------------------
+SELECT *
+FROM Employees
+WHERE YEAR(date_of_joining) BETWEEN 2019 AND 2020;
+--------------------------------------------------------------------
+SELECT E.name, E.city
+FROM Employees E
+JOIN Works W ON E.empid = W.empid
+JOIN Project P ON W.Projectid = P.Projectid
+WHERE P.title = 'Banking Project';
+----------------------------------------------------------------------
+SELECT E.name, SUM(W.total_hrs_worked) AS total_hours
+FROM Employees E
+JOIN Works W ON E.empid = W.empid
+JOIN Project P ON W.Projectid = P.Projectid
+WHERE P.title = 'Banking Project'
+GROUP BY E.name;
+---------------------------------------------------------------------
+SELECT E.name, E.city
+FROM Employees E
+JOIN Works W ON E.empid = W.empid
+JOIN Project P ON W.Projectid = P.Projectid
+WHERE E.city = P.city;
+-----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SQL Queries:
+Consider the given Database Schema: for problem statement 1
+Dept (Deptno , Name , Location, Managerempid)
+Employees (name, empid, address, city, dob, date_of_joining,gender, salary, deptno)
+Gender must take value ‘M’ or ‘F’.
+Project(Projectid, title,city).
+Works (empid , Projectid, total_hrs_worked);
+Dependant(empid, name_of_dependant, age, relation)
+Primary Key is underlined.
+1. Develop DDL to implement the above schema enforcing primary key, check constraints (F and
+M for gender) and foreign key constraints.
+2. Insert data in each table
+3. “Testing Project”is canceled so delete that entry from project
+4. Develop a SQL query to display all employees having salary &gt; 50000
+5. Develop a SQL query to display all projects of “Pune”
+6. Develop a SQL query to display all dependants of employee id 102
+7. Develop a SQL query to Find the number of employees working on each project.
+8. Develop a SQL query to find average salary of each department
+9. Develop a SQL query to display senior person of “Testing Department”
+10. Create a view containing the total number of employees whose project location is “Pune”
+
+
+------------------------------------------------------------------------------------------------
+
+-- Department table
+CREATE TABLE Dept (
+    Deptno INT PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL,
+    Location VARCHAR(255) NOT NULL,
+    Managerempid INT,
+    CONSTRAINT fk_manager FOREIGN KEY (Managerempid) REFERENCES Employees(empid)
+);
+
+-- Employees table
+CREATE TABLE Employees (
+    empid INT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    address VARCHAR(255),
+    city VARCHAR(255),
+    dob DATE,
+    date_of_joining DATE,
+    gender CHAR(1) CHECK (gender IN ('M', 'F')),
+    salary DECIMAL(10,2),
+    deptno INT,
+    CONSTRAINT fk_dept FOREIGN KEY (deptno) REFERENCES Dept(Deptno)
+);
+
+-- Project table
+CREATE TABLE Project (
+    Projectid INT PRIMARY KEY,
+    title VARCHAR(255),
+    city VARCHAR(255)
+);
+
+-- Works table
+CREATE TABLE Works (
+    empid INT,
+    Projectid INT,
+    total_hrs_worked INT,
+    PRIMARY KEY (empid, Projectid),
+    CONSTRAINT fk_works_emp FOREIGN KEY (empid) REFERENCES Employees(empid),
+    CONSTRAINT fk_works_project FOREIGN KEY (Projectid) REFERENCES Project(Projectid)
+);
+
+-- Dependant table
+CREATE TABLE Dependant (
+    empid INT,
+    name_of_dependant VARCHAR(255),
+    age INT,
+    relation VARCHAR(255),
+    PRIMARY KEY (empid, name_of_dependant),
+    CONSTRAINT fk_dependant_emp FOREIGN KEY (empid) REFERENCES Employees(empid)
+);
+--------------------------------------------------------------------------------------
+-- Insert data into Dept table
+INSERT INTO Dept VALUES (1, 'IT', 'Building 1', NULL);
+INSERT INTO Dept VALUES (2, 'HR', 'Building 2', NULL);
+-- Add more rows as needed
+
+-- Insert data into Employees table
+INSERT INTO Employees VALUES (1, 'John Doe', '123 Main St', 'City1', '1990-01-01', '2022-01-01', 'M', 50000.00, 1);
+INSERT INTO Employees VALUES (2, 'Jane Smith', '456 Oak St', 'City2', '1995-05-15', '2021-02-15', 'F', 60000.00, 2);
+-- Add more rows as needed
+
+-- Insert data into Project table
+INSERT INTO Project VALUES (1, 'Banking Project', 'City1');
+INSERT INTO Project VALUES (2, 'HR System', 'City2');
+INSERT INTO Project VALUES (3, 'Testing Project', 'City3');
+-- Add more rows as needed
+
+-- Insert data into Works table
+INSERT INTO Works VALUES (1, 1, 40);
+INSERT INTO Works VALUES (2, 1, 30);
+-- Add more rows as needed
+
+-- Insert data into Dependant table
+INSERT INTO Dependant VALUES (1, 'Dependant1', 5, 'Child');
+INSERT INTO Dependant VALUES (1, 'Dependant2', 8, 'Child');
+-- Add more rows as needed
+--------------------------------------------------------------------------------------
+DELETE FROM Project
+WHERE title = 'Testing Project';
+
+---------------------------------------------------------------------------------------
+SELECT *
+FROM Employees
+WHERE salary > 50000;
+----------------------------------------------------------------
+SELECT *
+FROM Project
+WHERE city = 'Pune';
+-----------------------------------------------------------------------------------
+SELECT *
+FROM Dependant
+WHERE empid = 102;
+---------------------------------------------------------------------------
+SELECT Project.Projectid, Project.title, COUNT(Works.empid) AS num_employees
+FROM Project
+LEFT JOIN Works ON Project.Projectid = Works.Projectid
+GROUP BY Project.Projectid, Project.title;
+-----------------------------------------------------------------------------
+SELECT Dept.deptno, Dept.Name AS department, AVG(Employees.salary) AS avg_salary
+FROM Dept
+JOIN Employees ON Dept.deptno = Employees.deptno
+GROUP BY Dept.deptno, Dept.Name;
+-------------------------------------------------------------------------------------
+SELECT empid, name, date_of_joining
+FROM Employees
+WHERE deptno = (SELECT deptno FROM Dept WHERE Name = 'Testing Department')
+ORDER BY date_of_joining
+LIMIT 1;
+-------------------------------------------------------------------------------------
+CREATE VIEW EmployeesInPune AS
+SELECT E.empid, E.name, E.city, P.title AS project_title, P.city AS project_location
+FROM Employees E
+JOIN Works W ON E.empid = W.empid
+JOIN Project P ON W.Projectid = P.Projectid
+WHERE P.city = 'Pune';
+------------------------------------------------------------------------------------\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SQL Queries:
+Consider the given Database Schema: for problem statement 1
+Dept (Deptno , Name , Location, Managerempid)
+Employees (name, empid, address, city, dob, date_of_joining,gender, salary, deptno)
+Gender must take value ‘M’ or ‘F’.
+Project(Projectid, title,city).
+Works (empid , Projectid, total_hrs_worked);
+Dependant(empid, name_of_dependant, age, relation)
+
+Primary Key is underlined.
+1. Develop DDL to implement the above schema enforcing primary key, check constraints (F and
+M for gender) and foreign key constraints.
+2. Insert data in each table
+3. Develop a SQL query to display all manager names
+4. Develop a SQL query to find the age of all employees
+5. Display all employees in descending order of age
+6. Develop a SQL query to Find the names of all employees who work for “ERP project
+7. Develop a SQL query to Find the names and cities of residence of all employees who work for
+“Banking project”
+8. Develop a SQL query to display senior person of “Testing Department”
+9. Develop a SQL query to Find the employees who are not having any project.
+10. Create a view containing the total number of employees whose project location is “Pune”
+Calculate total traveling allowance for all using view (1000 Rs each)
+
+-----------------------------------------------------------------------------------------------------------------
+-- Create Department Table
+CREATE TABLE Dept (
+    Deptno INT PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL,
+    Location VARCHAR(255),
+    Managerempid INT,
+    CONSTRAINT chk_gender CHECK (Gender IN ('M', 'F'))
+);
+
+-- Create Employees Table
+CREATE TABLE Employees (
+    empid INT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    address VARCHAR(255),
+    city VARCHAR(255),
+    dob DATE,
+    date_of_joining DATE,
+    gender CHAR(1) CHECK (gender IN ('M', 'F')),
+    salary DECIMAL(10, 2),
+    deptno INT,
+    CONSTRAINT fk_deptno FOREIGN KEY (deptno) REFERENCES Dept(Deptno)
+);
+
+-- Create Project Table
+CREATE TABLE Project (
+    Projectid INT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    city VARCHAR(255)
+);
+
+-- Create Works Table
+CREATE TABLE Works (
+    empid INT,
+    Projectid INT,
+    total_hrs_worked INT,
+    PRIMARY KEY (empid, Projectid),
+    CONSTRAINT fk_empid FOREIGN KEY (empid) REFERENCES Employees(empid),
+    CONSTRAINT fk_projectid FOREIGN KEY (Projectid) REFERENCES Project(Projectid)
+);
+
+-- Create Dependant Table
+CREATE TABLE Dependant (
+    empid INT,
+    name_of_dependant VARCHAR(255) NOT NULL,
+    age INT,
+    relation VARCHAR(255),
+    PRIMARY KEY (empid, name_of_dependant),
+    CONSTRAINT fk_dependant_empid FOREIGN KEY (empid) REFERENCES Employees(empid)
+);
+------------------------------------------------------------------------------------------
+-- Insert data into Dept table
+INSERT INTO Dept (Deptno, Name, Location, Managerempid) VALUES
+(1, 'IT', 'Building A', 101),
+(2, 'HR', 'Building B', 102);
+
+-- Insert data into Employees table
+INSERT INTO Employees (empid, name, address, city, dob, date_of_joining, gender, salary, deptno) VALUES
+(101, 'John Doe', '123 Main St', 'City1', '1980-01-01', '2020-01-01', 'M', 50000.00, 1),
+(102, 'Jane Smith', '456 Oak St', 'City2', '1985-05-15', '2019-02-15', 'F', 60000.00, 2);
+
+-- Insert data into Project table
+INSERT INTO Project (Projectid, title, city) VALUES
+(1, 'Project A', 'City1'),
+(2, 'Project B', 'City2');
+
+-- Insert data into Works table
+INSERT INTO Works (empid, Projectid, total_hrs_worked) VALUES
+(101, 1, 40),
+(102, 2, 30);
+
+-- Insert data into Dependant table
+INSERT INTO Dependant (empid, name_of_dependant, age, relation) VALUES
+(101, 'Child1', 10, 'Son'),
+(101, 'Child2', 8, 'Daughter'),
+(102, 'Spouse1', 32, 'Spouse');
+----------------------------------------------------------------------------------------------------
+
+SELECT e.name AS manager_name
+FROM Dept d
+JOIN Employees e ON d.Managerempid = e.empid;
+----------------------------------------------------------
+SELECT empid, name, dob, TIMESTAMPDIFF(YEAR, dob, CURDATE()) AS age
+FROM Employees;
+--------------------------------------------------------------------------
+SELECT empid, name, dob, TIMESTAMPDIFF(YEAR, dob, CURDATE()) AS age
+FROM Employees
+ORDER BY age DESC;
+------------------------------------------------------------------------------
+SELECT e.name
+FROM Employees e
+JOIN Works w ON e.empid = w.empid
+JOIN Project p ON w.Projectid = p.Projectid
+WHERE p.title = 'ERP Project';
+---------------------------------------------------------------------------
+SELECT e.name, e.city
+FROM Employees e
+JOIN Works w ON e.empid = w.empid
+JOIN Project p ON w.Projectid = p.Projectid
+WHERE p.title = 'Banking Project';
+------------------------------------------------------------------------------------------
+SELECT e.name AS senior_person
+FROM Employees e
+JOIN Dept d ON e.deptno = d.Deptno
+WHERE d.Name = 'Testing Department'
+ORDER BY e.dob DESC
+LIMIT 1;
+------------------------------------------------------------------------------
+SELECT e.*
+FROM Employees e
+LEFT JOIN Works w ON e.empid = w.empid
+WHERE w.Projectid IS NULL;
+-----------------------------------------------------------------------------
+-- Create a view for employees with project location "Pune"
+CREATE VIEW EmployeesInPune AS
+SELECT e.empid, e.name, e.deptno
+FROM Employees e
+JOIN Works w ON e.empid = w.empid
+JOIN Project p ON w.Projectid = p.Projectid
+WHERE p.city = 'Pune';
+
+-- Create a view for total traveling allowance
+CREATE VIEW TotalTravelingAllowance AS
+SELECT COUNT(empid) * 1000 AS total_allowance
+FROM EmployeesInPune;
+
+-- Query to get the total traveling allowance
+SELECT * FROM TotalTravelingAllowance;
+---------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Write PL/SQLcode block: Use of Control structure and Exception handling is mandatory.
+Suggested Problem statement:
+1. Consider Tables: 1. Borrower (Roll_no, Name, Date_of_Issue, Name_of_Book, Status) 2. Fine
+(Roll_no, Date, Amt)
+2. Accept Roll_no and Name_of_Book from user.
+3. Check the number of days (from Date_of_Issue).
+4. If days are between 15 to 30 then fine amount will be Rs 5per day.
+5. If no. of days&gt;30, per day fine will be Rs 50 per day and for days less than 30, Rs. 5 per day.
+6. After submitting the book, status will change from I to R.
+7. If condition of fine is true, then details will be stored into fine table.
+8. Also handles the exception by named exception handler or user define exception handler.
+--------------------------------------------------------------------------------------------------
+
+create database Library3;
+use Library3;
+create table borrower(rollin int primary key,name varchar(20),dateofissue date,nameofbook varchar(20),status varchar(20));
+create table fine(rollno int,foreign key(rollno) references borrower(rollin),returndate date,amount int);
+insert into borrower values(1,'abc','2023-08-25','SEPM','PEN');
+insert into borrower values(2,'xyz','2023-09-01','AI','PEN');
+insert into borrower values(3,'pqr','2023-08-15','DBMS','PEN');
+delimiter $
+
+create procedure calc_fine_lib6(in roll int)  
+	begin 
+	declare 
+		fine1 int; 
+	declare 
+		noofdays int; 
+	declare 
+		issuedate date; 
+	declare 
+		exit handler for SQLEXCEPTION select'create table definition'; 
+		select dateofissue into issuedate from borrower where rollin=roll; 
+		select datediff(curdate(),issuedate) into noofdays; 
+		
+		if noofdays>15 and noofdays<=30 then set fine1=noofdays*5; 
+			insert into fine values(roll,curdate(),fine1); 
+		elseif noofdays>30 then set fine1=((noofdays-30)*50) + 15*5; 
+			insert into fine values(roll,curdate(),fine1); 
+		else 
+			insert into fine values(roll,curdate(),0); 
+		end if; 
+		
+		update borrower set status='return' where rollin=roll; 
+end $
+
+delimiter ;
+call calc_fine_lib6(1);
+call calc_fine_lib6(2);
+call calc_fine_lib6(3);
+
+select "⇓⇓⇓ Following is the borrower table ⇓⇓⇓" as "";
+select * from borrower;
+select "⇓⇓⇓ Following is the fine table ⇓⇓⇓" as "";
+select * from fine;
+
+drop database Library3;
+
+
+
+------------------------------------------------------------------------------------
+create table borrower(rollin int primary key,name varchar(20),dateofissue date,nameofbook varchar(20),status varchar(20));
+create table fine(rollno int,foreign key(rollno) references borrower(rollin),returndate date,amount int);
+insert into borrower values(1,'abc','2023-08-25','SEPM','PEN');
+insert into borrower values(2,'xyz','2023-09-01','AI','PEN');
+insert into borrower values(3,'pqr','2023-08-15','DBMS','PEN');
+
+Step 2: Creating PROCEDURE
+DELIMITER $ #Defining a delimiter. See notes 1st point
+CREATE PROCEDURE fineCalculations(IN rno int(3), book_name char(20)) #Creating a procedure
+BEGIN
+DECLARE exit handler FOR SQLEXCEPTION select 'Table not found; #Explanation in notes (2nd point)
+DECLARE issue_date date; #A variable to temporarily store issue_date from table
+DECLARE fine_amt int; #A variable to temporarily store fine amount from table
+DECLARE diff int; #A variable to store difference between current date and issue date
+SELECT dateofIssue INTO issue_date FROM borrower where rollin = rno AND book_name = bname;
+SELECT datediff (CURDATE(), issue_date) INTO diff; #difference between current date and issue date
+IF(diff>15 AND diff<=30) THEN
+SET fine_amt = diff*5;
+INSERT INTO fine VALUES (rno, CURDATE(), fine_amt);
+ELSEIF(diff>30) THEN
+SET fine_amt = 15*5 + (diff - 30)*50; #Explanation in the notes (3rd point)
+INSERT INTO fine VALUES(rno, CURDATE(), fine_amt);
+END IF;
+UPDATE borrower SET status = "R" WHERE rollin = rno AND book_name = bname; #Set status to
+R(Returned)
+END; #End Procedure
+$ #End Procedure block
+DELIMITER ; #Reset the delimiter to ; (semi-colon). Note it is DELIMITER {SPACE} ;
+
+
+-----------------------------------------------------------------------------------------
+
+SET SERVEROUT ON
+SET VERIFY OFF
+/*
+CREATE TABLE  borrower(roll_no NUMBER , name VARCHAR2(25), dateofissue DATE,name_of_book VARCHAR2(25), status VARCHAR2(20));
+
+CREATE TABLE fine(roll_no NUMBER,date_of_return DATE,amt NUMBER);
+
+INSERT INTO borrower VALUES(45,'ASHUTOSH',TO_DATE('01-08-2022','DD-MM-YYYY'),'HARRY POTTER','PENDING');
+INSERT INTO borrower VALUES(46,'ARYAN',TO_DATE('15-08-2022','DD-MM-YYYY'),'DARK MATTER','PENDING');
+INSERT INTO borrower VALUES(47,'ROHAN',TO_DATE('24-08-2022','DD-MM-YYYY'),'SILENT HILL','PENDING');
+INSERT INTO borrower VALUES(48,'SANKET',TO_DATE('26-08-2022','DD-MM-YYYY'),'GOD OF WAR','PENDING');
+INSERT INTO borrower VALUES(49,'SARTHAK',TO_DATE('09-09-2022','DD-MM-YYYY'),'SPIDER-MAN','PENDING');
+*/
+
+
+
+DECLARE 
+	i_roll_no NUMBER;
+	name_of_book VARCHAR2(25);
+	no_of_days NUMBER;
+	return_date DATE := TO_DATE(SYSDATE,'DD-MM-YYYY');
+	temp NUMBER;
+	doi DATE;
+	fine NUMBER;
+BEGIN
+	i_roll_no := &i_roll_no;
+	name_of_book := '&nameofbook';
+	--dbms_output.put_line(return_date);
+	SELECT to_date(borrower.dateofissue,'DD-MM-YYYY') INTO doi FROM borrower WHERE borrower.roll_no = i_roll_no AND borrower.name_of_book = name_of_book;
+	no_of_days := return_date-doi;
+	dbms_output.put_line(no_of_days);
+	IF (no_of_days >15 AND no_of_days <=30) THEN
+		fine := 5*no_of_days;
+		
+	ELSIF (no_of_days>30 ) THEN
+		temp := no_of_days-30;
+		fine := 150 + temp*50;
+	END IF;
+	dbms_output.put_line(fine);
+	INSERT INTO fine VALUES(i_roll_no,return_date,fine);
+	UPDATE borrower SET status = 'RETURNED' WHERE borrower.roll_no = i_roll_no;
+	
+	
+END;
+/
+----------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Write a PL/SQL code block to calculate the area and perimeter of a rectangle for a value of length
+varying from 10 to 20 and breadth 10. Store the length and breadth and the corresponding values of the
+calculated area and perimeter in an empty table named areas, consisting of three columns, length,
+breadth and area.
+---------------------------------------------------
+SET SERVEROUTPUT ON
+CREATE TABLE assignment_3b(radius NUMBER,area NUMBER)
+
+DECLARE
+	radius_var NUMBER;
+	area_var NUMBER;
+	pi NUMBER := 3.14;
+BEGIN
+	FOR radius_var IN 5 .. 9 LOOP
+		area_var := pi*radius_var*radius_var;
+		dbms_output.put_line(area_var);
+		INSERT INTO assignment_3b VALUES (radius_var,area_var);
+	END LOOP;
+
+END;
+/
+----------------------------------------------------
+-- Create the areas table
+CREATE TABLE areas (
+    length NUMBER,
+    breadth NUMBER,
+    area NUMBER,
+    perimeter NUMBER
+);
+
+-- PL/SQL Code Block
+DECLARE
+    v_length NUMBER;
+    v_breadth CONSTANT NUMBER := 10;
+    v_area NUMBER;
+    v_perimeter NUMBER;
+
+BEGIN
+    FOR v_length IN 10..20 LOOP
+        -- Calculate area and perimeter
+        v_area := v_length * v_breadth;
+        v_perimeter := 2 * (v_length + v_breadth);
+
+        -- Insert values into the areas table
+        INSERT INTO areas (length, breadth, area, perimeter)
+        VALUES (v_length, v_breadth, v_area, v_perimeter);
+    END LOOP;
+    
+    -- Display the contents of the areas table
+    FOR area_rec IN (SELECT * FROM areas) LOOP
+        DBMS_OUTPUT.PUT_LINE('Length: ' || area_rec.length || ', Breadth: ' || area_rec.breadth || ', Area: ' || area_rec.area || ', Perimeter: ' || area_rec.perimeter);
+    END LOOP;
+
+END;
+/
+-------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MongoDB Queries: Design and Develop MongoDB Queries using CRUD
+operations.(UseCRUDoperations, SAVE method, logical operators etc.)
+.Implement the following MongoDb Query
+1. Create a collection named books.
+2. Insert 5 records with field TITLE,DESCRIPTION,BY,URL,TAGS AND LIKES
+3. Insert 1 more document in collection with additional field of user name and comments.
+4. Display all the documents whose title is &#39;mongodb&#39;.
+5. Display all the documents written by &#39;john&#39; or whose title is &#39;mongodb&#39;.
+6. Display all the documents whose title is &#39;mongodb&#39; and written by &#39;john&#39;.
+7. Display all the documents whose like is greater than 10.
+8. Display the second document published by &#39;john&#39;.
+9. Display all the books in the sorted fashion.
+10. Find the average number of likes of the books published by john
+11. Find the first and last book published by john.
+
+1} db.createCollection("books")
+2} db.books.insertMany([
+  { TITLE: "MongoDB Basics", DESCRIPTION: "Introduction to MongoDB", BY: "John", URL: "mongo.com/basics", TAGS: ["database", "NoSQL"], LIKES: 15 },
+  { TITLE: "Advanced MongoDB", DESCRIPTION: "Advanced MongoDB Concepts", BY: "Jane", URL: "mongo.com/advanced", TAGS: ["database", "NoSQL", "advanced"], LIKES: 20 },
+  { TITLE: "MongoDB in Action", DESCRIPTION: "Practical Guide to MongoDB", BY: "Jim", URL: "mongo.com/action", TAGS: ["database", "NoSQL", "guide"], LIKES: 8 },
+  { TITLE: "Mastering MongoDB", DESCRIPTION: "Master MongoDB Development", BY: "John", URL: "mongo.com/mastering", TAGS: ["database", "NoSQL", "master"], LIKES: 12 },
+  { TITLE: "MongoDB for Beginners", DESCRIPTION: "Getting Started with MongoDB", BY: "Alice", URL: "mongo.com/beginners", TAGS: ["database", "NoSQL", "beginner"], LIKES: 5 }
+])
+
+3}db.books.insertOne({
+  TITLE: "MongoDB New Feature",
+  DESCRIPTION: "Latest features in MongoDB",
+  BY: "Bob",
+  URL: "mongo.com/new-feature",
+  TAGS: ["database", "NoSQL", "latest"],
+  LIKES: 25,
+  USERNAME: "user123",
+  COMMENTS: "Great information!"
+})
+
+4}db.books.find({ TITLE: "mongodb" })
+
+5}db.books.find({ $or: [{ BY: "john" }, { TITLE: "mongodb" }] })
+
+6}db.books.find({ TITLE: "mongodb", BY: "john" })
+
+7}db.books.find({ LIKES: { $gt: 10 } })
+
+8}db.books.find({ BY: "john" }).limit(1).skip(1)
+
+9}db.books.find().sort({ TITLE: 1 })
+
+10}db.books.aggregate([
+  { $match: { BY: "John" } },
+  { $group: { _id: null, avgLikes: { $avg: "$LIKES" } } }
+])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MongoDB Queries: Design and Develop MongoDB Queries using CRUD
+operations.(UseCRUDoperations, SAVE method, logical operators etc.)
+.Implement the following MongoDb Query
+1. Create a collection named books.
+2. Insert 5 records with field TITLE,DESCRIPTION,BY,URL,TAGS AND LIKES
+3. Insert 1 more document in the collection with additional field of user name and comments.
+4. Display all the documents whose title is &#39;mongodb&#39;.
+5. Display all the documents written by &#39;john&#39; or whose title is &#39;mongodb&#39;.
+6. Display all the documents whose title is &#39;mongodb&#39; and written by &#39;john&#39;.
+7. Update the title of &#39;mongodb&#39; document to &#39;mongodb overview&#39;
+8. Delete the document titled &#39;nosql overview&#39;.
+9. Display exactly two documents written by &#39;john&#39;.
+10. Create an index on the author name.
+Display the books published by john and check if it uses the index which we have created
+11. Find the number of books published by john.
+
+1}db.createCollection("books")
+
+2}db.books.insertMany([
+  { TITLE: "MongoDB Basics", DESCRIPTION: "Introduction to MongoDB", BY: "John", URL: "mongo.com/basics", TAGS: ["database", "NoSQL"], LIKES: 15 },
+  { TITLE: "Advanced MongoDB", DESCRIPTION: "Advanced MongoDB Concepts", BY: "Jane", URL: "mongo.com/advanced", TAGS: ["database", "NoSQL", "advanced"], LIKES: 20 },
+  { TITLE: "MongoDB in Action", DESCRIPTION: "Practical Guide to MongoDB", BY: "Jim", URL: "mongo.com/action", TAGS: ["database", "NoSQL", "guide"], LIKES: 8 },
+  { TITLE: "Mastering MongoDB", DESCRIPTION: "Master MongoDB Development", BY: "John", URL: "mongo.com/mastering", TAGS: ["database", "NoSQL", "master"], LIKES: 12 },
+  { TITLE: "MongoDB for Beginners", DESCRIPTION: "Getting Started with MongoDB", BY: "Alice", URL: "mongo.com/beginners", TAGS: ["database", "NoSQL", "beginner"], LIKES: 5 }
+])
+
+3}db.books.insertOne({
+  TITLE: "MongoDB New Feature",
+  DESCRIPTION: "Latest features in MongoDB",
+  BY: "Bob",
+  URL: "mongo.com/new-feature",
+  TAGS: ["database", "NoSQL", "latest"],
+  LIKES: 25,
+  USERNAME: "user123",
+  COMMENTS: "Great information!"
+})
+
+4}db.books.find({ TITLE: "mongodb" })
+
+5}db.books.find({ $or: [{ BY: "john" }, { TITLE: "mongodb" }] })
+
+6}db.books.find({ TITLE: "mongodb", BY: "john" })
+
+7}db.books.updateOne({ TITLE: "mongodb" }, { $set: { TITLE: "mongodb overview" } })
+
+8}db.books.deleteOne({ TITLE: "nosql overview" })
+
+9}db.books.find({ BY: "john" }).limit(2)
+
+10}db.books.createIndex({ BY: 1 })
+
+11}db.books.find({ BY: "John" }).explain("executionStats")
+
+12}db.books.count({ BY: "John" })
+
+------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Consider the following schema
+account(acc-no,branch-name,balance)
+depositor(cust-name,acc-no)
+borrower (cust-name, loan-no)
+loan (loan - no, branch - name, amount)
+Write following queries using SQL
+1. Create tables using proper primary keys
+2. Update information of particular customer
+3. Find the customers having loan less than 1 lac
+4. Display account number and customer name starting with ‘P’
+5. Display name of the depositor with balance
+6. Find names of all customers who have a loan at the ‘Redwood branch’.
+7. Find all customers who have an account and loan or both.
+8. Find all customers who do not have loan
+9. Find average account balance at each branch.
+10. Find the name of borrower having maximum loan amount
+
+CREATE TABLE account (
+    acc_no INT PRIMARY KEY,
+    branch_name VARCHAR(255),
+    balance DECIMAL(10, 2)
+);
+
+CREATE TABLE depositor (
+    cust_name VARCHAR(255),
+    acc_no INT,
+    PRIMARY KEY (cust_name, acc_no),
+    FOREIGN KEY (acc_no) REFERENCES account(acc_no)
+);
+
+CREATE TABLE borrower (
+    cust_name VARCHAR(255),
+    loan_no INT,
+    PRIMARY KEY (cust_name, loan_no)
+);
+
+CREATE TABLE loan (
+    loan_no INT PRIMARY KEY,
+    branch_name VARCHAR(255),
+    amount DECIMAL(10, 2)
+);
+-------------------------------
+UPDATE account
+SET balance = 5000
+WHERE acc_no = 12345;
+-----------------------------------------------
+
+SELECT cust_name
+FROM borrower
+JOIN loan ON borrower.loan_no = loan.loan_no
+WHERE amount < 100000;
+------------------------------------------------------
+SELECT acc_no, cust_name
+FROM depositor
+WHERE cust_name LIKE 'P%';
+-------------------------------------------------------
+SELECT d.cust_name, a.balance
+FROM depositor d
+JOIN account a ON d.acc_no = a.acc_no;
+-------------------------------------------------
+SELECT DISTINCT b.cust_name
+FROM borrower b
+JOIN loan l ON b.loan_no = l.loan_no
+WHERE l.branch_name = 'Redwood';
+----------------------------------------------------
+SELECT DISTINCT d.cust_name
+FROM depositor d
+LEFT JOIN borrower b ON d.cust_name = b.cust_name
+WHERE d.acc_no IS NOT NULL OR b.cust_name IS NOT NULL;
+-----------------------------------------------------------
+SELECT d.cust_name
+FROM depositor d
+LEFT JOIN borrower b ON d.cust_name = b.cust_name
+WHERE b.cust_name IS NULL;
+---------------------------------------------------------------
+SELECT branch_name, AVG(balance) AS avg_balance
+FROM account
+GROUP BY branch_name;
+-------------------------------------------------------------
+SELECT b.cust_name
+FROM borrower b
+JOIN loan l ON b.loan_no = l.loan_no
+ORDER BY l.amount DESC
+LIMIT 1;
+-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Write a PL/SQL code to calculate Gross and net salary of the employee
+Employee (Empid, Name, Basic salary, type). Type may be Permanent or temporary.
+For Permanent employees following is the calculation for salary
+DA - 115% of Basic salary
+HRA - 12% of basic salary (if HRA is &gt; 20000 then it will be considered as 20000 only)
+Calculate Gross salary by adding DA and HRA
+Deductions are
+Income tax -2000 Rs
+Net salary= Gross Salary - Deductions
+For Temporary Only basic salary and deductions are there
+Prepare a salary table for all
+
+
+CREATE OR REPLACE PROCEDURE calculateSalary(
+    p_Empid IN NUMBER,
+    p_Name IN VARCHAR2,
+    p_BasicSalary IN NUMBER,
+    p_Type IN VARCHAR2
+) AS
+    v_DA NUMBER;
+    v_HRA NUMBER;
+    v_GrossSalary NUMBER;
+    v_Deductions NUMBER := 2000; -- Income tax deduction
+
+BEGIN
+    -- For Permanent employees
+    IF p_Type = 'Permanent' THEN
+        -- Calculate DA (115% of Basic Salary)
+        v_DA := p_BasicSalary * 1.15;
+
+        -- Calculate HRA (12% of Basic Salary, capped at 20000)
+        v_HRA := LEAST(p_BasicSalary * 0.12, 20000);
+
+        -- Calculate Gross Salary
+        v_GrossSalary := p_BasicSalary + v_DA + v_HRA;
+
+    -- For Temporary employees
+    ELSIF p_Type = 'Temporary' THEN
+        v_GrossSalary := p_BasicSalary;
+
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Invalid employee type');
+        RETURN;
+    END IF;
+
+    -- Calculate Net Salary (Gross Salary - Deductions)
+    DECLARE
+        v_NetSalary NUMBER := v_GrossSalary - v_Deductions;
+    BEGIN
+        -- Insert the calculated values into the salary table or print them as needed
+        -- For demonstration purposes, let's just print the values
+        DBMS_OUTPUT.PUT_LINE('Empid: ' || p_Empid);
+        DBMS_OUTPUT.PUT_LINE('Name: ' || p_Name);
+        DBMS_OUTPUT.PUT_LINE('Gross Salary: ' || v_GrossSalary);
+        DBMS_OUTPUT.PUT_LINE('Net Salary: ' || v_NetSalary);
+    END;
+
+END calculateSalary;
+/
+
+
+-- Set server output to display DBMS_OUTPUT messages
+SET SERVEROUTPUT ON;
+
+-- Execute the procedure with sample data
+BEGIN
+    calculateSalary(1, 'John Doe', 50000, 'Permanent');
+    calculateSalary(2, 'Jane Smith', 30000, 'Temporary');
+END;
+/
+-----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Physician (reg_no, name, tel_no, city)
+Patient (p_name, street, city)
+visit(p_name, reg_no, date_of _visit, fees)
+1. Create tables and insert values
+2. delete entry of p_name ‘Dipak’
+3. Get the patient details of ‘Nashik’ city
+4. Count number of physician of ‘Mumbai’
+5. Display a list of p_name in ascending order
+6. Get the patient name and fees, who paid fees &gt; 5000
+7. Find the name and city of patient who visited physician on 13th july 2017
+8. Get the name of the physician and no of patient visited to him
+9. Get date wise fees collected
+10. Display a Physician names who treated ‘Mina’
+
+1}-- Create Physician table
+CREATE TABLE Physician (
+    reg_no INT PRIMARY KEY,
+    name VARCHAR(255),
+    tel_no VARCHAR(15),
+    city VARCHAR(255)
+);
+
+-- Create Patient table
+CREATE TABLE Patient (
+    p_name VARCHAR(255) PRIMARY KEY,
+    street VARCHAR(255),
+    city VARCHAR(255)
+);
+
+-- Create Visit table
+CREATE TABLE Visit (
+    p_name VARCHAR(255),
+    reg_no INT,
+    date_of_visit DATE,
+    fees DECIMAL(10, 2),
+    PRIMARY KEY (p_name, reg_no, date_of_visit),
+    FOREIGN KEY (p_name) REFERENCES Patient(p_name),
+    FOREIGN KEY (reg_no) REFERENCES Physician(reg_no)
+);
+
+-- Insert values into Physician table
+INSERT INTO Physician VALUES (1, 'Dr. Smith', '123-456-7890', 'Mumbai');
+INSERT INTO Physician VALUES (2, 'Dr. Patel', '987-654-3210', 'Nashik');
+INSERT INTO Physician VALUES (3, 'Dr. Gupta', '456-789-0123', 'Mumbai');
+
+-- Insert values into Patient table
+INSERT INTO Patient VALUES ('John', '123 Main St', 'Mumbai');
+INSERT INTO Patient VALUES ('Jane', '456 Oak St', 'Nashik');
+INSERT INTO Patient VALUES ('Mina', '789 Pine St', 'Mumbai');
+
+-- Insert values into Visit table
+INSERT INTO Visit VALUES ('John', 1, '2022-01-15', 2000);
+INSERT INTO Visit VALUES ('Jane', 2, '2022-02-20', 3000);
+INSERT INTO Visit VALUES ('Mina', 3, '2017-07-13', 5000);
+
+
+
+
+2}-- Assuming there is an entry for 'Dipak' in the Patient table
+DELETE FROM Patient WHERE p_name = 'Dipak';
+
+3}SELECT * FROM Patient WHERE city = 'Nashik';
+
+4}SELECT COUNT(*) FROM Physician WHERE city = 'Mumbai';
+
+5}SELECT p_name FROM Patient ORDER BY p_name ASC;
+
+6}SELECT p_name, fees FROM Visit WHERE fees > 5000;
+
+7}SELECT P.p_name, P.city
+FROM Patient P
+JOIN Visit V ON P.p_name = V.p_name
+WHERE V.date_of_visit = '2017-07-13';
+
+8}SELECT P.name AS physician_name, COUNT(*) AS patient_count
+FROM Physician P
+JOIN Visit V ON P.reg_no = V.reg_no
+GROUP BY P.name;
+
+9}SELECT date_of_visit, SUM(fees) AS total_fees
+FROM Visit
+GROUP BY date_of_visit;
+
+10}SELECT P.name AS physician_name
+FROM Physician P
+JOIN Visit V ON P.reg_no = V.reg_no
+WHERE V.p_name = 'Mina';
+
+
+----------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Develop an elementary chatbot for any suitable customer interaction application
+import os
+import subprocess
+
+print("\t\t\t<============================= W E L C O M E =============================>")
+print("\t\t\t<============================= I'M A VIRTUAL ASSISTANT =============================>")
+
+password = input("Enter your password: ")
+
+while password != "Nikhil2027":
+        print("\n<==================================================================================================>\n")
+        print("\t\t<============================= W E L C O M E =============================>")
+        print("\t\t<============================= I'M VIRTUAL ASSISTANT =============================>")
+        print("\n=======================")
+        print("| Incorrect Password |")
+        print("=======================")
+        password = input("\nEnter your password: ")
+
+while True:
+        print("\n<==================================================================================================>\n")
+        user_input = input("\nHow can I help you, sir: ")
+
+        if user_input.lower() in ["hi", "hey", "hello"]:
+            print("Hello Sir...")
+           # os.system("espeak 'Hello Sir'")
+        elif user_input.lower() in ["bye", "stop", "exit"]:
+            print("Goodbye, sir. Have a nice day!")
+           # os.system("espeak 'Goodbye, sir. Have a nice day'")
+            break
+        elif user_input.lower() in ["who are you", "tell me about yourself", "about"]:
+            print("I'm a virtual assistant!")
+           # os.system("espeak 'I am a virtual assistant created by Nikhil'")
+        elif user_input.lower() in ["how are you", "whatsup", "how is your day"]:
+            print("I'm good, sir. Tell me, how can I help you?")
+          #  os.system("espeak 'I'm good, sir. Tell me, how can I help you'")
+        elif user_input.lower() == "open notepad":
+            print("Opening Notepad...")
+            os.system("espeak 'Opening Notepad'")
+            subprocess.Popen(["notepad.exe"])
+        elif user_input.lower() == "open google":
+            print("Opening Google...")
+            os.system("espeak 'Opening Google'")
+            subprocess.Popen(["start", "https://www.google.com"])
+        elif user_input.lower() == "open youtube":
+            print("Opening YouTube...")
+            os.system("espeak 'Opening YouTube'")
+            subprocess.Popen(["start", "https://www.youtube.com"])
+        elif user_input.lower() == "open instagram":
+            print("Opening Instagram...")
+            os.system("espeak 'Opening Instagram'")
+            subprocess.Popen(["start", "https://www.instagram.com"])
+        else:
+            print("Sorry, I could not understand your query. Please try again!")
+            os.system("espeak 'Sorry, I could not understand your query. Please try again'")
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Implement depth first search algorithm and Breadth First Search algorithm. Use an undirected graph
+and develop a recursive algorithm for searching all the vertices of a graph or tree data structure
+
+
+from collections import defaultdict, deque
+
+# Function to add an edge to the graph
+def add_edge(graph, u, v):
+    graph[u].append(v)
+    graph[v].append(u)
+
+# Depth-First Search (DFS) function
+def dfs(graph, node, visited):
+    if node not in visited:
+        print(node, end=' ')  # Print the current node
+        visited.add(node)  # Mark the node as visited
+        for neighbor in graph[node]:
+            dfs(graph, neighbor, visited)
+
+# Breadth-First Search (BFS) function
+def bfs(graph, start):
+    visited = set()
+    queue = deque([start])
+    while queue:
+        node = queue.popleft()
+        if node not in visited:
+            print(node, end=' ')  # Print the current node
+            visited.add(node)
+            queue.extend(neighbor for neighbor in graph[node] if neighbor not in visited)
+
+# Get the number of vertices and edges from the user
+num_vertices = int(input("Enter the number of vertices: "))
+num_edges = int(input("Enter the number of edges: "))
+
+# Create an empty graph as an adjacency list
+graph = defaultdict(list)
+
+# Input edges
+for _ in range(num_edges):
+    u, v = map(int, input("Enter an edge (format: u v): ").split())
+    add_edge(graph, u, v)
+
+# Choose a starting node for DFS and BFS
+start_node = int(input("Enter the starting node: "))
+
+# Initialize visited sets
+visited_dfs = set()
+visited_bfs = set()
+
+# Perform DFS and BFS
+print("Depth-First Search (DFS):")
+dfs(graph, start_node, visited_dfs)
+print("\n")
+print("Breadth-First Search (BFS):")
+bfs(graph, start_node)
+
+
+
+Enter the number of vertices: 5
+Enter the number of edges: 4
+Enter an edge (format: u v): 1 2
+Enter an edge (format: u v): 2 3
+Enter an edge (format: u v): 3 4
+Enter an edge (format: u v): 4 5
+Enter the starting node: 1
+
+Depth-First Search (DFS):
+1 2 3 4 5
+
+Breadth-First Search (BFS):
+1 2 3 4 5
+-------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Implement a solution for a Constraint Satisfaction Problem using Branch and Bound and Backtracking
+for n-queens problem or a graph coloring problem.
+def is_safe(board, row, col):
+    """
+    Check if it's safe to place a queen at a specific position (row, col) on the
+    board.
+    """
+    # Check the same column above this row
+    for i in range(row):
+        if board[i][col] == 1:
+            return False
+    # Check upper-left diagonal
+    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+    # Check upper-right diagonal
+    for i, j in zip(range(row, -1, -1), range(col, len(board))):
+        if board[i][j] == 1:
+            return False
+    return True
+
+def solve_n_queens(N):
+    """
+    Solve the N-Queens problem for a given board size (N x N).
+    """
+    board = [[0] * N for _ in range(N)]  # Create an empty chessboard
+    solutions = []  # List to store all solutions
+
+    def backtrack(row):
+        # If we've placed queens in all rows, we've found a solution
+        if row == N:
+            solutions.append(["".join("Q" if cell == 1 else "." for cell in row) for row in board])
+            return
+        # Try placing a queen in each column of the current row
+        for col in range(N):
+            if is_safe(board, row, col):
+                board[row][col] = 1  # Place the queen
+                backtrack(row + 1)  # Recur to the next row
+                board[row][col] = 0  # Backtrack (remove the queen)
+
+    backtrack(0)  # Start with the first row
+    return solutions
+
+def print_solutions(solutions):
+    """
+    Print all solutions to the N-Queens problem.
+    """
+    for i, solution in enumerate(solutions):
+        print(f"Solution {i + 1}:")
+        for row in solution:
+            print(row)
+        print()
+
+# Example usage with N = 4 (4-Queens problem)
+N = 4
+solutions = solve_n_queens(N)
+if solutions:
+    print_solutions(solutions)
+else:
+    print("No solution found.")
+
+
+---------------------------------------------------------------------------------------------------------\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Implement Greedy search algorithm for any of the following application: Selection Sort
+def selection_sort(arr):
+    n = len(arr)
+
+    for i in range(n - 1):
+        min_index = i
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_index]:
+                min_index = j
+        arr[i], arr[min_index] = arr[min_index], arr[i]
+
+if __name__ == "__main__":
+    my_array = [64, 25, 12, 22, 11]
+    print("Original array:", my_array)
+    selection_sort(my_array)
+    print("Sorted array:", my_array)
+-----------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Implement Alpha-Beta Tree search for any game search problem.
+
+MAX = 1000
+MIN = -1000
+
+def minimax(depth, nodeIndex, maximizingPlayer, values, alpha, beta):
+    if depth == 3:
+        return values[nodeIndex]
+
+    if maximizingPlayer:
+        best = MIN
+        for i in range(2):
+            val = minimax(depth + 1, nodeIndex * 2 + i, False, values, alpha, beta)
+            best = max(best, val)
+            alpha = max(alpha, best)
+            if beta <= alpha:
+                break
+        return best
+    else:
+        best = MAX
+        for i in range(2):
+            val = minimax(depth + 1, nodeIndex * 2 + i, True, values, alpha, beta)
+            best = min(best, val)
+            beta = min(beta, best)
+            if beta <= alpha:
+                break
+        return best
+
+if __name__ == "__main__":
+    values = [3, 5, 6, 9, 1, 2, 0, -1]
+    print("The optimal value is:", minimax(0, 0, True, values, MIN, MAX))
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Exporting and Importing data
+Design and develop SQL DML statements to demonstrate exporting tables to external files of different
+file formats ex. CSV, XLSX, TXT, etc.
+Design and develop SQL DML statements to demonstrate importing data from external files of different
+file formats ex. CSV, XLSX, TXT, etc.
+-------------
+create db
+create table
+
+show variables like '--secure_file_priv';
+select * into outfile '/addesss/sample.txt' from student;
+load data infile '/address/'into table student;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SQL Queries:
+    Consider the given Database Schema: for problem statement 1
+Dept (Deptno , Name , Location, Managerempid)
+Employees  (name, empid, address, city, dob, date_of_joining,gender, salary, deptno)
+Gender must take value ‘M’ or ‘F’.
+Project(Projectid, title,city).
+Works (empid , Projectid, total_hrs_worked);
+Dependant(empid, name_of_dependant, age, relation)
+Primary Key is underlined.
+1.	Develop DDL to implement the above schema enforcing primary key, check constraints (F and M for gender) and foreign key constraints.
+2.	Insert data in each table . 
+3.	Add column Mobile number in employee table
+4.	Update mobile numbers for each employee.
+Develop DML to Populate Database
+5.	Develop a SQL query to list employees  having name starting with ‘S’
+6.	Develop a SQL query to list department having location ‘Building 1’
+7.	Develop a SQL query to list employee having joining year 2019 to 2020
+8.	Develop  a SQL query to Find the names and cities of residence of all employees who work for “Banking project”
+9.	Develop  a SQL query to find time required for “Banking project”
+10.	Develop  a SQL query to Find all employees in the database who live in the same cities as the project  for which they work
+
+-----------------------------------------------------
+CREATE database SQL1;
+USE SQL1;
+
+Ans1]
+
+CREATE TABLE Dept (
+    Deptno INT PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL,
+    Location VARCHAR(255),
+    Managerempid INT,
+    CONSTRAINT fk_manager FOREIGN KEY (Managerempid) REFERENCES Employees(empid)
+);
+
+CREATE TABLE Employees (
+    empid INT PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL,
+    address VARCHAR(255),
+    city VARCHAR(255),
+    dob DATE,
+    date_of_joining DATE,
+    gender CHAR(1) CHECK (gender IN ('M', 'F')),
+    salary INT,
+    deptno INT,
+    CONSTRAINT fk_dept FOREIGN KEY (deptno) REFERENCES Dept(Deptno)
+);
+
+CREATE TABLE Project (
+    Projectid INT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    city VARCHAR(255)
+);
+
+CREATE TABLE Works (
+    empid INT,
+    Projectid INT,
+    total_hrs_worked INT,
+    PRIMARY KEY (empid, Projectid),
+    CONSTRAINT fk_works_employee FOREIGN KEY (empid) REFERENCES Employees(empid),
+    CONSTRAINT fk_works_project FOREIGN KEY (Projectid) REFERENCES Project(Projectid)
+);
+
+CREATE TABLE Dependant (
+    empid INT,
+    name_of_dependant VARCHAR(255) NOT NULL,
+    age INT,
+    relation VARCHAR(255),
+    PRIMARY KEY (empid, name_of_dependant),
+    CONSTRAINT fk_dependant_employee FOREIGN KEY (empid) REFERENCES Employees(empid)
+);
+
+----------------------------------------
+Ans2]
+
+INSERT INTO Dept VALUES (1, 'Sales', 'New York', 101);
+INSERT INTO Dept VALUES (2, 'HR', 'London', 102);
+
+INSERT INTO Employees VALUES (101, 'John Doe', '123 Main St', 'New York', '1980-01-01', '2022-01-01', 'M', 60000, 1);
+INSERT INTO Employees VALUES (102, 'Jane Smith', '456 Oak St', 'London', '1985-05-15', '2022-02-01', 'F', 55000, 2);
+
+INSERT INTO Project VALUES (1, 'Project A', 'New York');
+INSERT INTO Project VALUES (2, 'Project B', 'London');
+
+INSERT INTO Works VALUES (101, 1, 40);
+INSERT INTO Works VALUES (102, 1, 35);
+
+INSERT INTO Dependant VALUES (101, 'Child1', 10, 'Son');
+INSERT INTO Dependant VALUES (101, 'Child2', 8, 'Daughter');
+INSERT INTO Dependant VALUES (102, 'Spouse', 30, 'Spouse');
+
+-------------------------------------------------
+Ans3]
+
+ALTER TABLE Employees
+ADD Mobile_number VARCHAR(15);
+
+-----------------------------------------------
+Ans4]
+
+UPDATE Employees
+SET Mobile_number = '123-456-7890'
+WHERE empid = 101;
+
+---------------------------------------------
+
+Ans5]
+
+SELECT * FROM Employees
+WHERE Name LIKE 'S%';
+
+---------------------------------------------
+
+Ans6]
+
+SELECT * FROM Dept
+WHERE Location = 'Building 1';
+
+-------------------------------------------
+Ans7]
+
+SELECT * FROM Employees
+WHERE YEAR(date_of_joining) BETWEEN 2019 AND 2020;
+
+-------------------------------------------
+Ans8]
+
+SELECT E.Name, E.city
+FROM Employees E
+JOIN Works W ON E.empid = W.empid
+JOIN Project P ON W.Projectid = P.Projectid
+WHERE P.title = 'Banking project';
+
+--------------------------------------------
+Ans9]
+
+SELECT E.Name, W.total_hrs_worked
+FROM Employees E
+JOIN Works W ON E.empid = W.empid
+JOIN Project P ON W.Projectid = P.Projectid
+WHERE P.title = 'Banking project';
+
+--------------------------------------------
+Ans10]
+
+SELECT E.Name, E.city
+FROM Employees E
+JOIN Works W ON E.empid = W.empid
+JOIN Project P ON W.Projectid = P.Projectid
+WHERE E.city = P.city;
+
+
+
+#####################################################################################################
+
+SQL Queries:
+    Consider the given Database Schema: for problem statement 1
+Dept (Deptno , Name , Location, Managerempid)
+Employees  (name, empid, address, city, dob, date_of_joining,gender, salary, deptno)
+Gender must take value ‘M’ or ‘F’.
+Project(Projectid, title,city).
+Works (empid , Projectid, total_hrs_worked);
+Dependant(empid, name_of_dependant, age, relation)
+Primary Key is underlined.
+1.	Develop DDL to implement the above schema enforcing primary key, check constraints (F and M for gender) and foreign key constraints.
+2.	Insert data in each table  
+3.	“Testing Project”is canceled so delete that entry from project
+4.	Develop a SQL query to display all employees having salary > 50000
+5.	Develop a SQL query to display all projects  of “Pune”
+6.	Develop a SQL query to display all dependants of  employee id 102
+7.	Develop  a SQL query to Find the number of employees working on each project.
+8.	Develop  a SQL query to find average salary of each department
+9.	Develop  a SQL query to display senior person of “Testing Department”
+10.	Create a view containing the total number of employees  whose project location is  “Pune”
+
+-----------------------------------------------------
+CREATE database SQL2;
+USE SQL2;
+
+Ans1]
+
+CREATE TABLE Dept (
+    Deptno INT PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL,
+    Location VARCHAR(255),
+    Managerempid INT,
+    CONSTRAINT fk_manager FOREIGN KEY (Managerempid) REFERENCES Employees(empid)
+);
+
+CREATE TABLE Employees (
+    empid INT PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL,
+    address VARCHAR(255),
+    city VARCHAR(255),
+    dob DATE,
+    date_of_joining DATE,
+    gender CHAR(1) CHECK (gender IN ('M', 'F')),
+    salary INT,
+    deptno INT,
+    CONSTRAINT fk_dept FOREIGN KEY (deptno) REFERENCES Dept(Deptno)
+);
+
+CREATE TABLE Project (
+    Projectid INT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    city VARCHAR(255)
+);
+
+CREATE TABLE Works (
+    empid INT,
+    Projectid INT,
+    total_hrs_worked INT,
+    PRIMARY KEY (empid, Projectid),
+    CONSTRAINT fk_works_employee FOREIGN KEY (empid) REFERENCES Employees(empid),
+    CONSTRAINT fk_works_project FOREIGN KEY (Projectid) REFERENCES Project(Projectid)
+);
+
+CREATE TABLE Dependant (
+    empid INT,
+    name_of_dependant VARCHAR(255) NOT NULL,
+    age INT,
+    relation VARCHAR(255),
+    PRIMARY KEY (empid, name_of_dependant),
+    CONSTRAINT fk_dependant_employee FOREIGN KEY (empid) REFERENCES Employees(empid)
+);
+
+
+------------------------------------------------------------
+Ans2]
+
+INSERT INTO Dept VALUES (1, 'Sales', 'New York', 101);
+INSERT INTO Dept VALUES (2, 'HR', 'London', 102);
+
+INSERT INTO Employees VALUES (101, 'John Doe', '123 Main St', 'New York', '1980-01-01', '2022-01-01', 'M', 60000, 1);
+INSERT INTO Employees VALUES (102, 'Jane Smith', '456 Oak St', 'London', '1985-05-15', '2022-02-01', 'F', 55000, 2);
+
+INSERT INTO Project VALUES (1, 'Project A', 'New York');
+INSERT INTO Project VALUES (2, 'Project B', 'London');
+
+INSERT INTO Works VALUES (101, 1, 40);
+INSERT INTO Works VALUES (102, 1, 35);
+
+INSERT INTO Dependant VALUES (101, 'Child1', 10, 'Son');
+INSERT INTO Dependant VALUES (101, 'Child2', 8, 'Daughter');
+INSERT INTO Dependant VALUES (102, 'Spouse', 30, 'Spouse');
+
+
+---------------------------------------------------
+Ans3]
+
+DELETE FROM Project
+WHERE title = 'Testing Project';
+
+---------------------------------------------------
+Ans4] 
+
+SELECT * FROM Employees 
+WHERE salary > 50000;
+
+---------------------------------------------------
+Ans5]
+
+SELECT * FROM Project 
+WHERE city = 'Pune';
+
+---------------------------------------------------
+Ans6]
+
+SELECT * FROM Dependant 
+WHERE empid = 102;
+
+----------------------------------------------------
+Ans7]
+
+SELECT Projectid, COUNT(empid) 
+AS NumEmployees FROM Works GROUP BY Projectid;
+
+----------------------------------------------------
+Ans8]
+
+SELECT deptno, AVG(salary) 
+AS AvgSalary FROM Employees GROUP BY deptno;
+
+---------------------------------------------------
+Ans9]
+
+SELECT * FROM Employees 
+WHERE deptno = (SELECT Deptno FROM Dept 
+WHERE Name = 'Testing Department') 
+ORDER BY date_of_joining ASC LIMIT 1;
+
+---------------------------------------------------
+Ans10]
+
+CREATE VIEW EmployeesInPune AS
+SELECT e.*
+FROM Employees e
+JOIN Works w ON e.empid = w.empid
+JOIN Project p ON w.Projectid = p.Projectid
+WHERE p.city = 'Pune';
+
+ SELECT * FROM EmployeesInPune;
+
+################################################################################################################
+
+SQL Queries:
+    Consider the given Database Schema: for problem statement 1
+Dept (Deptno , Name , Location, Managerempid)
+Employees  (name, empid, address, city, dob, date_of_joining,gender, salary, deptno)
+Gender must take value ‘M’ or ‘F’.
+Project(Projectid, title,city).
+Works (empid , Projectid, total_hrs_worked);
+Dependant(empid, name_of_dependant, age, relation)
+Primary Key is underlined.
+1.	Develop DDL to implement the above schema enforcing primary key, check constraints (F and M for gender) and foreign key constraints.
+2.	Insert data in each table 
+3.	Develop a SQL query to display all manager names
+4.	Develop  a SQL query to find the age of all employees
+5.	Display all employees in descending order of age
+6.	Develop  a SQL query to Find the names of all employees who work for “ERP project
+7.	Develop  a SQL query to Find the names and cities of residence of all employees who work for “Banking project”
+8.	Develop  a SQL query to display senior person of “Testing Department”
+9.	Develop  a SQL query to Find the employees  who are not having any project.
+10.	Create a view containing the total number of employees  whose project location is  “Pune”
+Calculate total traveling allowance for all using view (1000 Rs each)
+
+--------------------------------------------------------
+CREATE database SQL3;
+USE SQL3;
+
+Ans1]
+
+CREATE TABLE Dept (
+    Deptno INT PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL,
+    Location VARCHAR(255),
+    Managerempid INT,
+    CONSTRAINT fk_manager FOREIGN KEY (Managerempid) REFERENCES Employees(empid)
+);
+
+CREATE TABLE Employees (
+    empid INT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    address VARCHAR(255),
+    city VARCHAR(255),
+    dob DATE,
+    date_of_joining DATE,
+    gender CHAR(1) CHECK (gender IN ('M', 'F')),
+    salary DECIMAL(10,2),
+    deptno INT,
+    CONSTRAINT fk_dept FOREIGN KEY (deptno) REFERENCES Dept(Deptno)
+);
+
+CREATE TABLE Project (
+    Projectid INT PRIMARY KEY,
+    title VARCHAR(255),
+    city VARCHAR(255)
+);
+
+CREATE TABLE Works (
+    empid INT,
+    Projectid INT,
+    total_hrs_worked INT,
+    PRIMARY KEY (empid, Projectid),
+    CONSTRAINT fk_works_emp FOREIGN KEY (empid) REFERENCES Employees(empid),
+    CONSTRAINT fk_works_project FOREIGN KEY (Projectid) REFERENCES Project(Projectid)
+);
+
+CREATE TABLE Dependant (
+    empid INT,
+    name_of_dependant VARCHAR(255),
+    age INT,
+    relation VARCHAR(255),
+    CONSTRAINT fk_dependant_emp FOREIGN KEY (empid) REFERENCES Employees(empid)
+);
+
+----------------------------------------------------------------
+Ans2]
+
+INSERT INTO Dept VALUES (1, 'HR', 'New York', 101);
+INSERT INTO Dept VALUES (2, 'IT', 'San Francisco', 102);
+
+INSERT INTO Employees VALUES (101, 'John Doe', '123 Main St', 'New York', '1980-01-01', '2020-01-01', 'M', 50000, 1);
+INSERT INTO Employees VALUES (102, 'Jane Smith', '456 Oak St', 'San Francisco', '1985-05-15', '2019-05-01', 'F', 60000, 2);
+
+INSERT INTO Project VALUES (1, 'ERP', 'Pune');
+INSERT INTO Project VALUES (2, 'Banking', 'New York');
+
+INSERT INTO Works VALUES (101, 1, 40);
+INSERT INTO Works VALUES (102, 2, 30);
+
+INSERT INTO Dependant VALUES (101, 'Child1', 5, 'Child');
+INSERT INTO Dependant VALUES (101, 'Child2', 8, 'Child');
+INSERT INTO Dependant VALUES (102, 'Spouse', 30, 'Spouse');
+
+---------------------------------------------------------------
+Ans3]
+
+SELECT E.name AS ManagerName
+FROM Employees E
+JOIN Dept D ON E.empid = D.Managerempid;
+
+--------------------------------------------------------------
+Ans4]
+
+SELECT name, TIMESTAMPDIFF(YEAR, dob, CURDATE()) AS Age
+FROM Employees;
+
+-----------------------------------------------------------
+Ans5]
+
+SELECT *
+FROM Employees
+ORDER BY TIMESTAMPDIFF(YEAR, dob, CURDATE()) DESC;
+
+-----------------------------------------------------------
+Ans6]
+
+SELECT E.name
+FROM Employees E
+JOIN Works W ON E.empid = W.empid
+JOIN Project P ON W.Projectid = P.Projectid
+WHERE P.title = 'ERP';
+
+
+-------------------------------------------------------
+Ans7]
+
+SELECT E.name, E.city
+FROM Employees E
+JOIN Works W ON E.empid = W.empid
+JOIN Project P ON W.Projectid = P.Projectid
+WHERE P.title = 'Banking';
+
+-----------------------------------------------------
+Ans8]
+
+SELECT E.name
+FROM Employees E
+JOIN Dept D ON E.deptno = D.Deptno
+WHERE D.Name = 'Testing'
+ORDER BY E.date_of_joining
+LIMIT 1;
+
+
+-------------------------------------------------
+Ans9]
+
+SELECT E.name
+FROM Employees E
+LEFT JOIN Works W ON E.empid = W.empid
+WHERE W.empid IS NULL;
+
+------------------------------------------------
+Ans10]
+
+CREATE VIEW EmployeesInPune AS
+SELECT COUNT(*) AS NumEmployees
+FROM Employees E
+JOIN Works W ON E.empid = W.empid
+JOIN Project P ON W.Projectid = P.Projectid
+WHERE P.city = 'Pune';
+
+-- Calculate total traveling allowance for all using the view (1000 Rs each)
+SELECT NumEmployees * 1000 AS TotalTravelingAllowance
+FROM EmployeesInPune;
+
+################################################################################################################
+
+Consider the following schema
+account(acc-no,branch-name,balance)
+depositor(cust-name,acc-no)
+borrower (cust-name, loan-no)
+loan (loan - no, branch - name, amount)
+Write following queries using SQL
+1.	Create tables using proper primary keys
+2.	Update information of particular customer
+3.	Find the customers having loan less than 1 lac
+4.	Display account number and customer name starting with ‘P’
+5.	Display name of the depositor with balance
+6.	Find names of all customers who have a loan at the ‘Redwood branch’.
+7.	Find all customers who have an account and loan or both.
+8.	Find all customers who do not have loan
+9.	Find average account balance at each branch.
+10.	Find the name of borrower having maximum loan amount
+
+---------------------------------------------------------
+
+CREATE database SQL4;
+USE SQL4;
+
+-----------------------------------------------------------
+Ans1]
+
+CREATE TABLE account (
+    acc_no INT PRIMARY KEY,
+    branch_name VARCHAR(255),
+    balance DECIMAL(10,2)
+);
+
+CREATE TABLE depositor (
+    cust_name VARCHAR(255),
+    acc_no INT,
+    PRIMARY KEY (cust_name, acc_no),
+    FOREIGN KEY (acc_no) REFERENCES account(acc_no)
+);
+
+CREATE TABLE borrower (
+    cust_name VARCHAR(255),
+    loan_no INT,
+    PRIMARY KEY (cust_name, loan_no)
+);
+
+CREATE TABLE loan (
+    loan_no INT PRIMARY KEY,
+    branch_name VARCHAR(255),
+    amount DECIMAL(10,2)
+);
+
+-----------------------------------------------------
+Ans2]
+
+UPDATE account
+SET balance = 1500
+WHERE acc_no = 1001;
+
+-----------------------------------------------------
+Ans3]
+
+SELECT cust_name
+FROM borrower B
+JOIN loan L ON B.loan_no = L.loan_no
+WHERE L.amount < 100000;
+
+-----------------------------------------------------
+Ans4]
+
+SELECT A.acc_no, D.cust_name
+FROM account A
+JOIN depositor D ON A.acc_no = D.acc_no
+WHERE D.cust_name LIKE 'P%';
+
+-----------------------------------------------------
+Ans5]
+
+SELECT D.cust_name, A.balance
+FROM depositor D
+JOIN account A ON D.acc_no = A.acc_no;
+
+
+-----------------------------------------------------
+Ans6]
+
+SELECT DISTINCT B.cust_name
+FROM borrower B
+JOIN loan L ON B.loan_no = L.loan_no
+WHERE L.branch_name = 'Redwood';
+
+-----------------------------------------------------
+Ans7]
+
+SELECT DISTINCT cust_name
+FROM (
+    SELECT cust_name FROM depositor
+    UNION
+    SELECT cust_name FROM borrower
+) AS CombinedCustomers;
+
+-----------------------------------------------------
+Ans8]
+
+SELECT D.cust_name
+FROM depositor D
+LEFT JOIN borrower B ON D.cust_name = B.cust_name
+WHERE B.cust_name IS NULL;
+
+-----------------------------------------------------
+Ans9]
+
+SELECT branch_name, AVG(balance) AS avg_balance
+FROM account
+GROUP BY branch_name;
+
+-----------------------------------------------------
+Ans10]
+
+SELECT B.cust_name
+FROM borrower B
+JOIN loan L ON B.loan_no = L.loan_no
+WHERE L.amount = (SELECT MAX(amount) FROM loan);
+
+
+#############################################################################################################
+
+Physician (reg_no, name, tel_no, city)
+Patient (p_name, street, city)
+visit(p_name, reg_no, date_of _visit, fees)
+1.	Create tables and insert values
+2.	delete entry of p_name ‘Dipak’
+3.	Get the patient details of ‘Nashik’ city
+4.	Count number of physician of ‘Mumbai’
+5.	Display a list of p_name in ascending order
+6.	Get the patient name and fees, who paid fees > 5000
+7.	Find the name and city of patient who visited physician on 13th july 2017
+8.	Get the name of the physician and no of patient visited to him
+9.	Get date wise fees collected
+10.	 Display a Physician names who treated  ‘Mina’
+
+-----------------------------------------------------
+
+CREATE database SQL5;
+USE SQL5;
+
+Ans1]
+
+Create tables and insert values
+CREATE TABLE Physician (
+    reg_no INT PRIMARY KEY,
+    name VARCHAR(255),
+    tel_no VARCHAR(20),
+    city VARCHAR(255)
+);
+
+CREATE TABLE Patient (
+    p_name VARCHAR(255) PRIMARY KEY,
+    street VARCHAR(255),
+    city VARCHAR(255)
+);
+
+CREATE TABLE Visit (
+    p_name VARCHAR(255),
+    reg_no INT,
+    date_of_visit DATE,
+    fees DECIMAL(10, 2),
+    PRIMARY KEY (p_name, reg_no, date_of_visit),
+    FOREIGN KEY (p_name) REFERENCES Patient(p_name),
+    FOREIGN KEY (reg_no) REFERENCES Physician(reg_no)
+);
+
+INSERT INTO Physician VALUES (1, 'Dr. Smith', '123-456-7890', 'Mumbai');
+INSERT INTO Physician VALUES (2, 'Dr. Patel', '987-654-3210', 'Nashik');
+
+INSERT INTO Patient VALUES ('Alice', '123 Main St', 'Mumbai');
+INSERT INTO Patient VALUES ('Bob', '456 Oak St', 'Nashik');
+INSERT INTO Patient VALUES ('Charlie', '789 Maple St', 'Pune');
+
+INSERT INTO Visit VALUES ('Alice', 1, '2023-01-01', 1000.00);
+INSERT INTO Visit VALUES ('Bob', 2, '2023-02-01', 2000.00);
+INSERT INTO Visit VALUES ('Charlie', 1, '2023-03-01', 3000.00);
+
+-------------------------------------------------
+Ans2]
+
+Delete entry of p_name 'Dipak'
+DELETE FROM Patient WHERE p_name = 'Dipak';
+
+------------------------------------------------
+Ans3]
+ 
+
+Get the patient details of 'Nashik' city
+SELECT *
+FROM Patient
+WHERE city = 'Nashik';
+
+---------------------------------------
+Ans4]
+
+Count number of physicians in 'Mumbai'
+SELECT COUNT(*) AS num_physicians
+FROM Physician
+WHERE city = 'Mumbai';
+
+---------------------------------------
+Ans5]
+
+Display a list of p_name in ascending order
+SELECT p_name
+FROM Patient
+ORDER BY p_name ASC;
+
+---------------------------------------
+Ans6]
+
+Get the patient name and fees, who paid fees > 5000
+SELECT p_name, fees
+FROM Visit
+WHERE fees > 5000;
+
+--------------------------------------
+Ans7]
+
+Find the name and city of the patient who visited the physician on 13th July 2017
+SELECT P.p_name, P.city
+FROM Patient P
+JOIN Visit V ON P.p_name = V.p_name
+WHERE V.date_of_visit = '2017-07-13';
+
+-------------------------------------
+Ans8]
+
+Get the name of the physician and the number of patients visited to him
+SELECT P.name AS physician_name, COUNT(V.p_name) AS num_patients_visited
+FROM Physician P
+LEFT JOIN Visit V ON P.reg_no = V.reg_no
+GROUP BY P.reg_no;
+
+---------------------------------------
+Ans9]
+
+Get date-wise fees collected
+SELECT date_of_visit, SUM(fees) AS total_fees_collected
+FROM Visit
+GROUP BY date_of_visit;
+
+----------------------------------------
+Ans10]
+
+Display physician names who treated 'Mina'
+SELECT DISTINCT P.name
+FROM Physician P
+JOIN Visit V ON P.reg_no = V.reg_no
+WHERE V.p_name = 'Mina';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------
+
+/*Write PL/SQLcode block: Use of Control structure and Exception handling is mandatory.
+Suggested Problem statement:
+1.	Consider Tables: 1.  bot (Roll_no, Name, Date_of_Issue, Name_of_Book, Status) 2.  fit (Roll_no, Date, Amt) 
+2.	Accept Roll_no and Name_of_Book from user. 
+3.	Check the number of days (from Date_of_Issue). 
+4.	If days are between 15 to 30 then fine amount will be Rs 5per day. 
+5.	If no. of days>30, per day fine will be Rs 50 per day and for days less than 30, Rs. 5 per day. 
+6.	After submitting the book, status will change from I to R. 
+7.	If condition of fine is true, then details will be stored into fit table. 
+8.	Also handles the exception by named exception handler or user define exception handler.*/
+
+
+SET SERVEROUTPUT ON;
+
+CREATE TABLE borrower (Roll_no INT, Name VARCHAR2(20), Date_of_Issue DATE, Name_of_Book VARCHAR2(20), Status VARCHAR2(2));
+CREATE TABLE fine (Roll_no INT, Date_ DATE, Amt INT);
+
+INSERT INTO borrower VALUES (7, 'Ronaldo', DATE '2023-08-25', 'abcd', 'I');
+INSERT INTO borrower VALUES (10, 'Messi', DATE '2023-09-01', 'pqrs', 'I');
+INSERT INTO borrower VALUES (11, 'Chhetri', DATE '2023-08-15', 'wxyz', 'I');
+
+DECLARE
+  FineException EXCEPTION;
+  PRAGMA EXCEPTION_INIT(FineException, -20001);
+  
+  PROCEDURE fine_calculator(p_rollno IN INT) AS
+    v_fine1 INT;
+    v_DOI DATE;
+    v_no_of_days INT;
+  BEGIN
+    SELECT Date_of_Issue INTO v_DOI FROM borrower WHERE Roll_no = p_rollno;
+    v_no_of_days := TRUNC(SYSDATE - v_DOI);
+
+    IF v_no_of_days > 15 AND v_no_of_days <= 30 THEN
+      v_fine1 := v_no_of_days * 5;
+      INSERT INTO fine VALUES (p_rollno, SYSDATE, v_fine1);
+    ELSIF v_no_of_days > 30 THEN
+      v_fine1 := (v_no_of_days - 30) * 50 + 15 * 5;
+      INSERT INTO fine VALUES (p_rollno, SYSDATE, v_fine1);
+    ELSE
+      INSERT INTO fine VALUES (p_rollno, SYSDATE, 0);
+    END IF;
+
+    UPDATE borrower SET Status = 'R' WHERE Roll_no = p_rollno;
+    
+    IF v_fine1 > 500 THEN
+      RAISE FineException;
+    END IF;
+  EXCEPTION
+    WHEN FineException THEN
+      DBMS_OUTPUT.PUT_LINE('Fine exceeds 500 Rs. Cannot proceed.');
+  END fine_calculator;
+BEGIN
+  fine_calculator(7);
+  fine_calculator(10);
+  fine_calculator(11);
+END;
+/
+
+SELECT 'Following is the borrower table' AS "" FROM DUAL;
+SELECT * FROM borrower;
+
+SELECT 'Following is the fine table' AS "" FROM DUAL;
+SELECT * FROM fine;
+
+--------------------------------------------------------------------------------------------------
+/*Write a PL/SQL code block to calculate the area and perimeter of a rectangle for a value of length varying from 10 to 20 and breadth 10. Store the length and breadth and the corresponding values of the calculated area and perimeter in an empty table named areas, consisting of three  columns, length, breadth  and area.*/
+
+SET SERVEROUTPUT ON;
+ 
+CREATE TABLE calculate (length INT, breadth INT, area INT);
+
+CREATE OR REPLACE PROCEDURE calculate_area_perimeter AS
+    v_length INT;
+    v_breadth INT;
+    v_areaf INT;
+    v_perimeter INT;
+
+BEGIN
+    v_breadth := 10;
+    v_length := 10;
+
+    WHILE v_length <= 20 LOOP
+        v_areaf := v_length * v_breadth;
+        v_perimeter := 2 * (v_length + v_breadth);
+
+        INSERT INTO calculate VALUES (v_length, v_breadth, v_areaf);
+
+        DBMS_OUTPUT.PUT_LINE('Length: ' || v_length || ', Breadth: ' || v_breadth || ', Area: ' || v_areaf || ', Perimeter: ' || v_perimeter);
+
+        v_length := v_length + 1;
+    END LOOP;
+END calculate_area_perimeter;
+/
+
+SET SERVEROUTPUT ON;
+
+EXEC calculate_area_perimeter;
+
+-----------------------------------------------------------------------------------------------------
+
+
+
+
+/*
+Write a PL/SQL code to calculate Gross and net salary of the employee
+Employee (Empid, Name, Basic salary, type). Type may be Permanent or temporary.
+For Permanent employees following is the calculation for salary
+DA - 15% of Basic salary
+HRA - 12% of basic salary (if HRA is > 20000 then it will be considered as 20000 only)
+Calculate Gross salary by adding DA and HRA
+Deductions are 
+Income tax -2000 Rs
+Net salary= Gross Salary - Deductions
+For Temporary Only basic salary and deductions are there 
+Prepare a salary table for all 
+*/
+
+SET SERVEROUTPUT ON;
+
+CREATE TABLE Employee (
+    Empid INT PRIMARY KEY,
+    Name VARCHAR(20),
+    Basic_salary INT,
+    Type VARCHAR(20)
+);
+
+CREATE TABLE Salary (
+    Empid INT,
+    Basic_salary INT,
+    Gross_salary INT,
+    Net_salary INT
+);
+
+INSERT INTO Employee VALUES (101, 'Parimal', 20000, 'Permanent');
+INSERT INTO Employee VALUES (102, 'Saish', 21000, 'Permanent');
+
+CREATE OR REPLACE PROCEDURE salary_count(emp_id INT)
+IS
+    emp_type VARCHAR(15);
+    Basic_salary INT;
+    DA INT;
+    HRA INT;
+    Net_salary INT;
+    Income_tax INT;
+    Gross_Salary INT;
+    Deduction INT;
+BEGIN
+    SELECT Basic_salary, Type INTO Basic_salary, emp_type FROM Employee WHERE Empid = emp_id;
+
+    IF emp_type = 'Permanent' THEN
+        Deduction := 2000;
+        DA := Basic_salary * 0.50;
+        HRA := Basic_salary * 0.12;
+        Gross_Salary := Basic_salary + DA + HRA;
+        Net_salary := Gross_Salary - Deduction;
+
+        INSERT INTO Salary VALUES (emp_id, Basic_salary, Gross_Salary, Net_salary);
+    END IF;
+END;
+/
+
+SET SERVEROUTPUT ON;
+
+EXEC salary_count(101);
+EXEC salary_count(102);
+
+SELECT * FROM Employee;
+SELECT * FROM Salary;
+
+----------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+dbs> use hello; 
+switched to db hello 
+………………………………………………………………………………………………………………………………………………….. 
+hello> db.createCollecƟon('books')
+{ ok: 1 } 
+……………………………………………………………………………………………………………………………………………………. 
+hello> db.books.insertMany([{Title:'mongodb',DescripƟon:'Intro to 
+mongodb',By:'John',URL:'xyz.com',Tags:'basic syntaxs',Likes:50}, 
+{Title:'mongodb intermediate',DescripƟon:'Deep into mongodb',By:'Harry',URL:'abc.com',Tags:'basics 
+and advance',Likes:20}, 
+{Title:'MYSQL basics',DescripƟon:'Intro to Mysql',By:'John',URL:'qrz.com',Tags:'Mysql',Likes:5},
+{Title:'Advance MYSQL',DescripƟon:'Deep Study into 
+MYSQL',By:'Albert',URL:'pqr.com',Tags:'mysql,nosql',Likes:15}, 
+{Title:'All AboutDBMS',DescripƟon:'Database 
+management',By:'Jenny',URL:'dbs.com',Tags:'dbms',Likes:50}]) 
+Output
+{ 
+ acknowledged: true, 
+ insertedIds: { 
+ '0': ObjectId("655326cdĩ9d14f6f017d720"),
+ '1': ObjectId("655326cdĩ9d14f6f017d721"),
+ '2': ObjectId("655326cdĩ9d14f6f017d722"),
+ '3': ObjectId("655326cdĩ9d14f6f017d723"),
+ '4': ObjectId("655326cdĩ9d14f6f017d724")
+ } 
+} 
+MongoDB Queries: Design and Develop MongoDB Queries using CRUD 
+operaƟons.(UseCRUDoperaƟons, SAVE method, logical operators etc.)
+.Implement the following MongoDb Query 
+1. Create a collecƟon named books.
+2. Insert 5 records with field TITLE,DESCRIPTION,BY,URL,TAGS AND LIKES 
+3. Insert 1 more document in collecƟon with addiƟonal field of user name and comments.
+4. Display all the documents whose Ɵtle is 'mongodb'.
+5. Display all the documents wriƩen by 'john' or whose Ɵtle is 'mongodb'.
+6. Display all the documents whose Ɵtle is 'mongodb' and wriƩen by 'john'.
+7. Display all the documents whose like is greater than 10. 
+8. Display the second document published by 'john'. 
+9. Display all the books in the sorted fashion. 
+10. Find the average number of likes of the books published by john 
+11. Find the first and last book published by john.
+…………………………………………………………………………………………………………………… 
+hello> db.books.find().preƩy()
+Output[ 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d720"),
+ Title: 'mongodb', 
+ DescripƟon: 'Intro to mongodb',
+ By: 'John', 
+ URL: 'xyz.com', 
+ Tags: 'basic syntaxs', 
+ Likes: 50 
+ }, 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d721"),
+ Title: 'mongodb intermediate', 
+ DescripƟon: 'Deep into mongodb',
+ By: 'Harry', 
+ URL: 'abc.com', 
+ Tags: 'basics and advance', 
+ Likes: 20 
+ }, 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d722"),
+ Title: 'MYSQL basics', 
+ DescripƟon: 'Intro to Mysql',
+ By: 'John', 
+ URL: 'qrz.com', 
+ Tags: 'Mysql', 
+ Likes: 5 
+ }, 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d723"),
+ Title: 'Advance MYSQL', 
+ DescripƟon: 'Deep Study into MYSQL',
+ By: 'Albert', 
+ URL: 'pqr.com', 
+ Tags: 'mysql,nosql', 
+ Likes: 15 
+ }, 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d724"),
+ Title: 'All AboutDBMS', 
+ DescripƟon: 'Database management',
+ By: 'Jenny', 
+ URL: 'dbs.com', 
+ Tags: 'dbms', 
+ Likes: 50 
+ } 
+] 
+……………………………………………………………………………………………………………………………………………….. 
+hello> db.books.insertOne({Title:'mongodb and beyond',DescripƟon:'Exploring more in 
+mongodb',By:'Eva',URL:'hre.com',Tags:'exploraƟon',Likes:9,Username:'user1',Comments:'good for 
+students.'}) 
+Output{ 
+ acknowledged: true, 
+ insertedId: ObjectId("6553286cĩ9d14f6f017d725")
+} 
+……………………………………………………………………………………………………………………………………………………………. 
+hello> db.books.find({Title:'mongodb'}) 
+Output[ 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d720"),
+ Title: 'mongodb', 
+ DescripƟon: 'Intro to mongodb',
+ By: 'John', 
+ URL: 'xyz.com', 
+ Tags: 'basic syntaxs', 
+ Likes: 50 
+ } 
+] 
+………………………………………………………………………………………………………………………………………………………… 
+hello> db.books.find({$or:[{Title:'mongodb'},{By:'John'}]}) 
+Output[ 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d720"),
+ Title: 'mongodb', 
+ DescripƟon: 'Intro to mongodb',
+ By: 'John', 
+ URL: 'xyz.com', 
+ Tags: 'basic syntaxs', 
+ Likes: 50 
+ }, 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d722"),
+ Title: 'MYSQL basics', 
+ DescripƟon: 'Intro to Mysql',
+ By: 'John', 
+ URL: 'qrz.com', 
+ Tags: 'Mysql', 
+ Likes: 5 
+ } 
+] 
+……………………………………………………………………………………………………………………………………………………… 
+hello> db.books.find({$and:[{Title:'mongodb'},{By:'John'}]}) 
+Output[ 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d720"),
+ Title: 'mongodb', 
+ DescripƟon: 'Intro to mongodb',
+ By: 'John', 
+ URL: 'xyz.com', 
+ Tags: 'basic syntaxs', 
+ Likes: 50 
+ } 
+] 
+……………………………………………………………………………………………………………………………………………………………. 
+hello> db.books.find({Likes:{$gt:10}}) 
+Output[ 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d720"),
+ Title: 'mongodb', 
+ DescripƟon: 'Intro to mongodb',
+ By: 'John', 
+ URL: 'xyz.com', 
+ Tags: 'basic syntaxs', 
+ Likes: 50 
+ }, 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d721"),
+ Title: 'mongodb intermediate', 
+ DescripƟon: 'Deep into mongodb',
+ By: 'Harry', 
+ URL: 'abc.com', 
+ Tags: 'basics and advance', 
+ Likes: 20 
+ }, 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d723"),
+ Title: 'Advance MYSQL', 
+ DescripƟon: 'Deep Study into MYSQL',
+ By: 'Albert', 
+ URL: 'pqr.com', 
+ Tags: 'mysql,nosql', 
+ Likes: 15 
+ }, 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d724"),
+ Title: 'All AboutDBMS', 
+ DescripƟon: 'Database management',
+ By: 'Jenny', 
+ URL: 'dbs.com', 
+ Tags: 'dbms', 
+ Likes: 50 
+ } 
+] 
+………………………………………………………………………………………………………………………………………………………. 
+hello> db.books.find({ By: "John" }).limit(1).skip(1) 
+Output[ 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d722"),
+ Title: 'MYSQL basics', 
+ DescripƟon: 'Intro to Mysql',
+ By: 'John', 
+ URL: 'qrz.com', 
+ Tags: 'Mysql', 
+ Likes: 5 } ] 
+hello> db.books.find().sort({ Title: 1 }) 
+Output[ 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d723"),
+ Title: 'Advance MYSQL', 
+ DescripƟon: 'Deep Study into MYSQL',
+ By: 'Albert', 
+ URL: 'pqr.com', 
+ Tags: 'mysql,nosql', 
+ Likes: 15 
+ }, 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d724"),
+ Title: 'All AboutDBMS', 
+ DescripƟon: 'Database management',
+ By: 'Jenny', 
+ URL: 'dbs.com', 
+ Tags: 'dbms', 
+ Likes: 50 
+ }, 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d722"),
+ Title: 'MYSQL basics', 
+ DescripƟon: 'Intro to Mysql',
+ By: 'John', 
+ URL: 'qrz.com', 
+ Tags: 'Mysql', 
+ Likes: 5 
+ }, 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d720"),
+ Title: 'mongodb', 
+ DescripƟon: 'Intro to mongodb',
+ By: 'John', 
+ URL: 'xyz.com', 
+ Tags: 'basic syntaxs', 
+ Likes: 50 
+ }, 
+ { 
+ _id: ObjectId("6553286cĩ9d14f6f017d725"),
+ Title: 'mongodb and beyond', 
+ DescripƟon: 'Exploring more in mongodb',
+ By: 'Eva', 
+ URL: 'hre.com', 
+ Tags: 'exploraƟon',
+ Likes: 9, 
+ Username: 'user1', 
+ Comments: 'good for students.' 
+ }, 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d721"),
+ Title: 'mongodb intermediate', 
+ DescripƟon: 'Deep into mongodb',
+ By: 'Harry', 
+ URL: 'abc.com', 
+ Tags: 'basics and advance', 
+ Likes: 20 
+ }] 
+…………………………………………………………………………………………………………………………………………………………. 
+hello> db.books.aggregate([{$match:{By:'John'}},{$group:{_id:null,avglikes:{$avg:'$Likes'}}}]) 
+Output[ { _id: null, avglikes: 27.5 } ] 
+……………………………………………………………………………………………………………………………………………………. 
+hello> db.books.find({ By: "John" }).sort({ _id: 1 }).limit(1) 
+Output[ 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d720"),
+ Title: 'mongodb', 
+ DescripƟon: 'Intro to mongodb',
+ By: 'John', 
+ URL: 'xyz.com', 
+ Tags: 'basic syntaxs', 
+ Likes: 50 
+ } 
+] 
+hello> db.books.find({ By: "John" }).sort({ _id: -1 }).limit(1) 
+Output[ 
+ { 
+ _id: ObjectId("655326cdĩ9d14f6f017d722"),
+ Title: 'MYSQL basics', 
+ DescripƟon: 'Intro to Mysql',
+ By: 'John', 
+ URL: 'qrz.com', 
+ Tags: 'Mysql', 
+ Likes: 5 
+ } 
+
+
+---------------------------------------------------------------------------------------------------------------
+MAX = 1000
+MIN = -1000
+
+def minimax(depth, nodeIndex, maximizingPlayer, values, alpha, beta):
+    if depth == 3:
+        return values[nodeIndex]
+
+    if maximizingPlayer:
+        best = MIN
+        for i in range(2):
+            val = minimax(depth + 1, nodeIndex * 2 + i, False, values, alpha, beta)
+            best = max(best, val)
+            alpha = max(alpha, best)
+            if beta <= alpha:
+                break
+        return best
+    else:
+        best = MAX
+        for i in range(2):
+            val = minimax(depth + 1, nodeIndex * 2 + i, True, values, alpha, beta)
+            best = min(best, val)
+            beta = min(beta, best)
+            if beta <= alpha:
+                break
+        return best
+        
+if __name__ == "__main__":
+    values = [int(x) for x in input("Enter comma-separated values for the tree nodes: ").split(",")]
+    print("The optimal value is:", minimax(0, 0, True, values,MIN,MAX))
+-----------------------------------------------------------------------------------
+import random
+
+# Updated banking data with more accounts and transactions
+bank_data = {
+    '123456789': {'name': 'John Doe', 'balance': 1000, 'transactions': ['Transaction: + Rs 500 (Deposit)', 'Transaction: - Rs 200 (Withdrawal)']},
+    '987654321': {'name': 'Jane Smith', 'balance': 500, 'transactions': ['Transaction: + Rs 300 (Deposit)', 'Transaction: + Rs 200 (Deposit)']},
+    '111223344': {'name': 'Alice Johnson', 'balance': 1500, 'transactions': []},
+    '444556677': {'name': 'Bob Williams', 'balance': 200, 'transactions': []},
+    '555667788': {'name': 'Eva Davis', 'balance': 800, 'transactions': []},
+    '999888777': {'name': 'Michael Brown', 'balance': 1200, 'transactions': []},
+    '333222111': {'name': 'Sophia Miller', 'balance': 300, 'transactions': ['Transaction: + Rs 100 (Deposit)', 'Transaction: - Rs 50 (Withdrawal)']},
+    '777666555': {'name': 'David Wilson', 'balance': 100, 'transactions': ['Transaction: + Rs 50 (Deposit)', 'Transaction: - Rs 30 (Withdrawal)']}
+}
+
+def greet():
+    responses = ["Hello! I'm your Banking Virtual Assistant.",
+                 "Welcome! How can I assist you today?",
+                 "Hi there! What can I do for you?"]
+    return random.choice(responses)
+
+def get_min_max_balance_holders():
+    min_balance_holder = min(bank_data, key=lambda k: bank_data[k]['balance'])
+    max_balance_holder = max(bank_data, key=lambda k: bank_data[k]['balance'])
+    
+    return min_balance_holder, max_balance_holder
+
+def get_account_info(account_number):
+    account_info = bank_data.get(account_number)
+    if account_info:
+        return f"Account Holder: {account_info['name']}\nAccount Balance: Rs {account_info['balance']}"
+    else:
+        return "Account not found. Please check your account number."
+
+def get_transaction_history(account_number):
+    account_info = bank_data.get(account_number)
+    if account_info:
+        transactions = account_info['transactions']
+        if transactions:
+            return "\n".join(transactions)
+        else:
+            return "No transactions found for this account."
+    else:
+        return "Account not found. Please check your account number."
+
+def perform_transaction(account_number, amount):
+    account_info = bank_data.get(account_number)
+    if account_info:
+        account_info['balance'] += amount
+        transaction_description = f"Transaction: + Rs {amount} (Deposit)"
+        account_info['transactions'].append(transaction_description)
+        return f"Transaction successful. New balance: Rs {account_info['balance']}"
+    else:
+        return "Account not found. Please check your account number."
+
+def chat():
+    print(greet())
+
+    while True:
+        user_input = input("You: ")
+
+        if user_input.lower() in ['bye', 'exit', 'quit']:
+            print("Goodbye! Have a great day.")
+            break
+        elif 'account holder with minimum balance' in user_input.lower():
+            min_holder = get_min_max_balance_holders()[0]
+            min_balance = bank_data[min_holder]['balance']
+            print(f"Bot: Account holder with the minimum balance: {bank_data[min_holder]['name']} (Rs {min_balance})")
+        elif 'account holder with maximum balance' in user_input.lower():
+            max_holder = get_min_max_balance_holders()[1]
+            max_balance = bank_data[max_holder]['balance']
+            print(f"Bot: Account holder with the maximum balance: {bank_data[max_holder]['name']} (Rs {max_balance})")
+        elif 'what is my account balance?' in user_input.lower():
+            account_number = input("Enter your account number: ")
+            response = get_account_info(account_number)
+            print(f"Bot: {response}")
+        elif 'show me my transaction history?' in user_input.lower():
+            account_number = input("Enter your account number: ")
+            response = get_transaction_history(account_number)
+            print(f"Bot: {response}")
+        elif 'i want to make a deposit' in user_input.lower():
+            account_number = input("Enter your account number: ")
+            amount = int(input("Enter the deposit amount: "))
+            response = perform_transaction(account_number, amount)
+            print(f"Bot: {response}")
+        else:
+            print("Bot: I'm not sure how to respond to that. Ask me something else!")
+
+if __name__ == "__main__":
+    chat()
+
+
+
+-------------------------------------------------------------------
+from collections import deque
+
+def create_graph():
+    graph = {}
+    vertices = int(input("Enter the number of vertices: "))
+    
+    for i in range(vertices):
+        neighbors = list(map(int, input(f"Enter neighbors for vertex {i}: ").split()))
+        graph[i] = neighbors
+    return graph
+
+def dfs(graph, v, visited):
+    visited[v] = True
+    print(v, end=' ')
+
+    for neighbor in graph[v]:
+        if not visited[neighbor]:
+            dfs(graph, neighbor, visited)
+
+def bfs(graph, v):
+    visited = [False] * len(graph)
+    queue = deque() 
+    queue.append(v)
+    visited[v] = True
+
+    while queue:
+        v = queue.popleft()
+        print(v, end=' ')
+
+        for neighbor in graph[v]:
+            if not visited[neighbor]:
+                queue.append(neighbor)
+                visited[neighbor] = True
+
+graph = create_graph()
+v = int(input("Enter the starting vertex: "))
+
+print("DFS:")
+dfs(graph, v, [False] * len(graph))
+print("\nBFS:")
+bfs(graph, v)
+
+
+--------------------------------------------------def greedy_selection_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        min_index = i
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_index]:
+                min_index = j
+        arr[i], arr[min_index] = arr[min_index], arr[i]
+
+user_input = input("Enter numbers separated by spaces: ")
+arr = [int(x) for x in user_input.split()]
+greedy_selection_sort(arr)
+print("Sorted array using Greedy Selection Sort is:", arr)---------------------------
+--------------------------------------------------------------------------------------
+class NQueens:
+    def __init__(self, n):
+        self.n = n
+        self.board = [-1] * n
+
+    def is_safe(self, row, col):
+        for i in range(row):
+            if (
+                self.board[i] == col
+                or self.board[i] - i == col - row
+                or self.board[i] + i == col + row
+            ):
+                return False
+        return True
+
+    def print_solution(self):
+        for i in range(self.n):
+            row_str = ""
+            for j in range(self.n):
+                if self.board[i] == j:
+                    row_str += "Q "
+                else:
+                    row_str += ". "
+            print(row_str)
+        print()
+
+    def solve_backtracking(self, row=0):
+        if row == self.n:
+            self.print_solution()
+            return
+
+        for col in range(self.n):
+            if self.is_safe(row, col):
+                self.board[row] = col
+                self.solve_backtracking(row + 1)
+                self.board[row] = -1
+
+    def solve_branch_and_bound(self, row=0):
+        if row == self.n:
+            self.print_solution()
+            return
+
+        for col in range(self.n):
+            if self.is_safe(row, col):
+                self.board[row] = col
+                self.solve_branch_and_bound(row + 1)
+                self.board[row] = -1
+
+    def solve(self, algorithm="backtracking"):
+        if algorithm == "backtracking":
+            print("Solving N-Queens using Backtracking:")
+            self.solve_backtracking()
+        elif algorithm == "branch_and_bound":
+            print("Solving N-Queens using Branch and Bound:")
+            self.solve_branch_and_bound()
+        else:
+            print("Invalid algorithm specified.")
+
+
+if __name__ == "__main__":
+    try:
+        n_queens_size = int(input("Enter the number of queens: "))
+        n_queens = NQueens(n_queens_size)
+        n_queens.solve("backtracking")
+        n_queens.solve("branch_and_bound")
+    except ValueError:
+        print("Please enter a valid integer for the number of queens.")
+
+
+
+------------------------------------------------------------------------------------\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PR 01
+
+1} CREATE TABLE Dept (Deptno INT PRIMARY KEY,Name VARCHAR(50),Location VARCHAR(50));
+
+2 }INSERT INTO Dept (Deptno, Name, Location)VALUES(1, 'Sales', 'New York'),(2, 'Marketing', 'Los Angeles'),(3, 'Finance', 'Chicago');
+
+3} INSERT INTO Dept (Deptno, Name, Location)VALUES (4, 'HR', 'Houston');
+
+4}UPDATE DeptSET Location = 'Dallas'WHERE Deptno = 3;
+
+5}DELETE FROM Dept WHERE Deptno = 2;
+
+6}SELECT * FROM Dept;
+
+7}SELECT * FROM DeptWHERE Location = 'New York';
+
+8}SELECT COUNT(*) AS TotalDepartments FROM Dept;
+
+9}SELECT * FROM Dept ORDER BY Name;
+
+10}SELECT Location, COUNT(*) AS DepartmentCount, AVG(Deptno) AS AvgDeptNumber FROM Dept GROUP BY Location;
+
+11}SELECT * FROM Dept WHERE Name LIKE 'S%';
+
+12}UPDATE Dept SET Name = 'Technology'WHERE Deptno = 1 AND Location = 'New York';
+
+13}SELECT * FROM Dept WHERE Location IN ('New York', 'Chicago');
+
+14}SELECT MAX(Deptno) AS MaxDeptNumber FROM Dept;
+
+15}UPDATE Dept SET Location = 'Seattle' WHERE Location = 'Los Angeles';
+
+16} DELETE FROM Dept WHERE Name IN ('HR', 'Finance');
+
+17} SELECT DISTINCT Location FROM Dept;
+
+Syntax:-
+1}  CREATE TABLE table_name(column1 datatype,column2 datatype,column3 datatype,.....columnN datatype,[PRIMARY KEY( one or more columns ),]);
+2} ALTER TABLE table_name RENAME TO new_table_name;
+   ALTER TABLE table_name ADD column_name datatype;
+   ALTER TABLE table_name DROP COLUMN column_name;
+   ALTER TABLE table_name MODIFY COLUMN column_name datatype;
+3} DROP TABLE table_name;
+4}SELECT column-names FROM table-name [ WHERE condition]
+5}INSERT INTO : Creates a record.
+Syntax
+ INSERT INTO table-name (column-names) 
+ VALUES (values)
+6}UPDATE table_name
+SET column1 = value1, column2 = value2....columnN=valueN 
+[ WHERE CONDITION ];
+7}DELETE FROM table_name WHERE {CONDITION};
+8}GRANT privilege_name
+ON object_name
+TO {user_name |PUBLIC |role_name}
+[WITH GRANT OPTION];
+9}REVOKE
+Takes back privileges granted from user.
+REVOKE privilege_name
+ON object_name
+FROM {user_name |PUBLIC |role_name}
+10}Commit;
+11}rollback;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PR02
+Inner Join Syntax:
+SELECT column_name(s) FROM table1
+INNER JOIN table2 ON table1.column_name = table2.column_name;
+
+Left Join Syntax:
+SELECT column_name(s) FROM table1
+LEFT JOIN table2 ON table1.column_name = table2.column_name;
+
+Right Join Syntax:
+SELECT column_name(s) FROM table1
+RIGHT JOIN table2 ON table1.column_name = table2.column_name;
+
+Full Outer Join Syntax:
+SELECT column_name(s) FROM table1
+FULL OUTER JOIN table2 ON table1.column_name = table2.column_name;
+
+
+---------------------------------------------------------------------------
+CREATE TABLE Department (
+    DeptID INT PRIMARY KEY,
+    DeptName VARCHAR(255),
+    Location VARCHAR(255)
+);
+
+INSERT INTO Department (DeptID, DeptName, Location)
+VALUES
+    (1, 'Sales', 'New York'),
+    (2, 'Marketing', 'Los Angeles'),
+    (3, 'Finance', 'Chicago');
+-----------------------------------------------
+CREATE TABLE Employee (
+    EmpID INT PRIMARY KEY,
+    EmpName VARCHAR(255),
+    DeptID INT,
+    Salary DECIMAL(10, 2),
+    FOREIGN KEY (DeptID) REFERENCES Department(DeptID)
+);
+
+INSERT INTO Employee (EmpID, EmpName, DeptID, Salary)
+VALUES
+    (1, 'John Doe', 1, 60000),
+    (2, 'Jane Smith', 2, 55000),
+    (3, 'Bob Johnson', 1, 62000);
+-------------------------------------------------------
+inner join 
+SELECT Employee.EmpID, EmpName, Salary, DeptName
+FROM Employee
+INNER JOIN Department ON Employee.DeptID = Department.DeptID;
+--------------------------------------------------------------
+left join 
+SELECT Employee.EmpID, EmpName, Salary, DeptName
+FROM Employee
+LEFT JOIN Department ON Employee.DeptID = Department.DeptID;
+-------------------------------------------------------------------
+subqueury ex
+SELECT EmpID, EmpName, Salary
+FROM Employee
+WHERE DeptID = (SELECT DeptID FROM Department WHERE DeptName = 'Sales');
+-------------------------------------------------------------
+view
+CREATE VIEW EmployeeDetails AS
+SELECT EmpID, EmpName, Salary, DeptName
+FROM Employee
+INNER JOIN Department ON Employee.DeptID = Department.DeptID;
+
+-- Query the view
+SELECT * FROM EmployeeDetails;
+-----------------------------------------------------------
+CREATE TABLE EmployeeSales AS
+SELECT EmpID, EmpName, Salary, DeptName
+FROM Employee
+INNER JOIN Department ON Employee.DeptID = Department.DeptID
+WHERE DeptName = 'Sales';
+-------------------------------------------------------------
+groupby count 
+SELECT DeptName, COUNT(*) AS EmployeeCount
+FROM Employee
+JOIN Department ON Employee.DeptID = Department.DeptID
+GROUP BY DeptName;
+----------------------------------------------------------------
+groupby sum
+SELECT DeptName, SUM(Salary) AS TotalSalary
+FROM Employee
+JOIN Department ON Employee.DeptID = Department.DeptID
+GROUP BY DeptName;
+
+----------------------------------------------------------------
+grpby avg
+SELECT DeptName, AVG(Salary) AS AvgSalary
+FROM Employee
+JOIN Department ON Employee.DeptID = Department.DeptID
+GROUP BY DeptName;
+-------------------------------------------------------------------
+orderby
+SELECT EmpName, Salary
+FROM Employee
+ORDER BY Salary DESC;
+----------------------------------------------------
+view with grp by
+CREATE VIEW DeptEmployeeCount AS
+SELECT DeptName, COUNT(*) AS EmployeeCount
+FROM Employee
+JOIN Department ON Employee.DeptID = Department.DeptID
+GROUP BY DeptName;
+
+-- Query the view
+SELECT * FROM DeptEmployeeCount;
+-------------------------------------------------------------
+min nd max
+SELECT MIN(Salary) AS MinSalary, MAX(Salary) AS MaxSalary
+FROM Employee;
+--------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pr 03 
+1}create collection
+db.createCollection("employees");
+
+2}insert into doc
+db.employees.insertOne({
+    empID: 1,
+    empName: "John Doe",
+    salary: 60000,
+    department: "IT"
+});
+
+3}Insert into multiple doc
+db.employees.insertMany([
+    { empID: 2, empName: "Jane Smith", salary: 55000, department: "HR" },
+    { empID: 3, empName: "Bob Johnson", salary: 62000, department: "Finance" }
+]);
+
+4}update single doc
+db.employees.updateOne(
+    { empID: 1 },
+    { $set: { salary: 65000 } }
+);
+
+5}update multiple doc
+db.employees.updateMany(
+    { department: "IT" },
+    { $inc: { salary: 5000 } }
+);
+
+6}replace single doc
+db.employees.replaceOne(
+    { empID: 1 },
+    { empID: 1, empName: "John Doe", salary: 70000, department: "IT" }
+);
+
+7}delete single doc
+db.employees.deleteOne({ empID: 2 });
+
+8}delete multiple doc
+db.employees.deleteMany({ salary: { $lt: 60000 } });
+
+9}save method updaring exsting doc
+db.employees.save({
+    _id: 1,
+    empID: 1,
+    empName: "John Doe",
+    salary: 72000,
+    department: "IT"
+});
+
+10}save method insert new doc
+db.employees.save({
+    empID: 4,
+    empName: "Alice Johnson",
+    salary: 58000,
+    department: "Marketing"
+});
+
+11}logical and opearotr
+db.employees.find({
+    $and: [
+        { salary: { $gt: 50000 } },
+        { department: "IT" }
+    ]
+});
+
+
+12}logical or 
+db.employees.find({
+    $or: [
+        { salary: { $gt: 60000 } },
+        { department: "HR" }
+    ]
+});
+
+
+13}logical not 
+db.employees.find({
+    salary: { $not: { $lt: 60000 } }
+});
+
+14}
+logical nor
+db.employees.find({
+    $nor: [
+        { department: "IT" },
+        { department: "HR" }
+    ]
+});
+
+15}count
+db.employees.find({ department: "IT" }).count();
+
+16} Using $avg Operator (Average Salary):
+db.employees.aggregate([
+    { $group: { _id: null, avgSalary: { $avg: "$salary" } } }
+]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PR04
+create database Library3;
+use Library3;
+create table borrower(rollin int primary key,name varchar(20),dateofissue date,nameofbook varchar(20),status varchar(20));
+create table fine(rollno int,foreign key(rollno) references borrower(rollin),returndate date,amount int);
+insert into borrower values(1,'abc','2023-08-25','SEPM','PEN');
+insert into borrower values(2,'xyz','2023-09-01','AI','PEN');
+insert into borrower values(3,'pqr','2023-08-15','DBMS','PEN');
+delimiter $
+
+create procedure calc_fine_lib6(in roll int)  
+	begin 
+	declare 
+		fine1 int; 
+	declare 
+		noofdays int; 
+	declare 
+		issuedate date; 
+	declare 
+		exit handler for SQLEXCEPTION select'create table definition'; 
+		select dateofissue into issuedate from borrower where rollin=roll; 
+		select datediff(curdate(),issuedate) into noofdays; 
+		
+		if noofdays>15 and noofdays<=30 then set fine1=noofdays*5; 
+			insert into fine values(roll,curdate(),fine1); 
+		elseif noofdays>30 then set fine1=((noofdays-30)*50) + 15*5; 
+			insert into fine values(roll,curdate(),fine1); 
+		else 
+			insert into fine values(roll,curdate(),0); 
+		end if; 
+		
+		update borrower set status='return' where rollin=roll; 
+end $
+
+delimiter ;
+call calc_fine_lib6(1);
+call calc_fine_lib6(2);
+call calc_fine_lib6(3);
+
+select "⇓⇓⇓ Following is the borrower table ⇓⇓⇓" as "";
+select * from borrower;
+select "⇓⇓⇓ Following is the fine table ⇓⇓⇓" as "";
+select * from fine;
+
+drop database Library3;
+
+
+
+------------------------------------------------------------------------------------
+create table borrower(rollin int primary key,name varchar(20),dateofissue date,nameofbook varchar(20),status varchar(20));
+create table fine(rollno int,foreign key(rollno) references borrower(rollin),returndate date,amount int);
+insert into borrower values(1,'abc','2023-08-25','SEPM','PEN');
+insert into borrower values(2,'xyz','2023-09-01','AI','PEN');
+insert into borrower values(3,'pqr','2023-08-15','DBMS','PEN');
+
+Step 2: Creating PROCEDURE
+DELIMITER $ #Defining a delimiter. See notes 1st point
+CREATE PROCEDURE fineCalculations(IN rno int(3), book_name char(20)) #Creating a procedure
+BEGIN
+DECLARE exit handler FOR SQLEXCEPTION select 'Table not found; #Explanation in notes (2nd point)
+DECLARE issue_date date; #A variable to temporarily store issue_date from table
+DECLARE fine_amt int; #A variable to temporarily store fine amount from table
+DECLARE diff int; #A variable to store difference between current date and issue date
+SELECT dateofIssue INTO issue_date FROM borrower where rollin = rno AND book_name = bname;
+SELECT datediff (CURDATE(), issue_date) INTO diff; #difference between current date and issue date
+IF(diff>15 AND diff<=30) THEN
+SET fine_amt = diff*5;
+INSERT INTO fine VALUES (rno, CURDATE(), fine_amt);
+ELSEIF(diff>30) THEN
+SET fine_amt = 15*5 + (diff - 30)*50; #Explanation in the notes (3rd point)
+INSERT INTO fine VALUES(rno, CURDATE(), fine_amt);
+END IF;
+UPDATE borrower SET status = "R" WHERE rollin = rno AND book_name = bname; #Set status to
+R(Returned)
+END; #End Procedure
+$ #End Procedure block
+DELIMITER ; #Reset the delimiter to ; (semi-colon). Note it is DELIMITER {SPACE} ;
+
+
+-----------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pr 05
+create db
+create table
+
+show variables like '--secure_file_priv';
+select * into outfile '/addesss/sample.txt' from student;
+load data infile '/address/'into table student;
+
+
+
+---------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pr07
+
+
+
+
